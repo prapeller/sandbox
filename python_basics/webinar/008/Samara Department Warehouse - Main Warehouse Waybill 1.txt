@@ -1,0 +1,5 @@
+Shipment number: 1
+from: Samara Department Warehouse (Samara)
+to: Main Warehouse (Moscow)
+
+Printer HP Laser 107a        7050 rub

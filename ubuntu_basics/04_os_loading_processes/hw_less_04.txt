@@ -1,0 +1,133 @@
+1. Потоки ввода/вывода. Создать файл, используя команду echo. Используя команду cat, прочитать содержимое всех файлов каталога etc, ошибки перенаправить в отдельный файл.
+2. Конвейер (pipeline). Использовать команду cut на вывод длинного списка каталога, чтобы отобразить только права доступа к файлам. Затем отправить в конвейере этот вывод на sort и uniq, чтобы отфильтровать все повторяющиеся строки.
+3. Управление процессами.) Изменить конфигурационный файл службы SSH: /etc/ssh/sshd_config, отключив аутентификацию по паролю PasswordAuthentication no. Выполните рестарт службы systemctl restart sshd (service sshd restart), верните аутентификацию по паролю, выполните reload службы systemctl reload sshd (services sshd reload). В чём различие между действиями restart и reload? Создайте файл при помощи команды cat > file_name, напишите текст и завершите комбинацией ctrl+d. Какой сигнал передадим процессу?
+4. Сигналы процессам. Запустите mc. Используя ps, найдите PID процесса, завершите процесс, передав ему сигнал 9.
+
+
+C:\Users\prape>ssh prapeller@192.168.100.16
+Welcome to Ubuntu 20.10 (GNU/Linux 5.8.0-43-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+0 updates can be installed immediately.
+0 of these updates are security updates.
+
+Last login: Sat Feb 20 12:49:42 2021 from 192.168.100.30
+
+prapeller@prapeller-VirtualBox:~$ cd lesson4/
+prapeller@prapeller-VirtualBox:~/lesson4$ ll
+total 44
+drwxrwxr-x  2 prapeller prapeller  4096 фев 20 15:17 ./
+drwxr-xr-x 17 prapeller prapeller  4096 фев 20 14:47 ../
+-rw-rw-r--  1 prapeller prapeller 35246 фев 20 13:16 mciri.txt
+
+
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+1) 
+prapeller@prapeller-VirtualBox:~/lesson4$ echo 'some text' > text_file.txt
+prapeller@prapeller-VirtualBox:~/lesson4$ cat text_file.txt
+some text
+
+prapeller@prapeller-VirtualBox:~/lesson4$ cat /etc/* 1>etc.txt 2>etc_err.txt
+prapeller@prapeller-VirtualBox:~/lesson4$ tail etc.txt
+# installation of packages available from the repository
+
+if [[ -x /usr/lib/command-not-found ]] ; then
+        if (( ! ${+functions[command_not_found_handler]} )) ; then
+                function command_not_found_handler {
+                        [[ -x /usr/lib/command-not-found ]] || return 1
+                        /usr/lib/command-not-found -- ${1+"$1"} && :
+                }
+        fi
+fi
+prapeller@prapeller-VirtualBox:~/lesson4$ tail etc_err.txt
+cat: /etc/UPower: Is a directory
+cat: /etc/usb_modeswitch.d: Is a directory
+cat: /etc/vim: Is a directory
+cat: /etc/vmware-tools: Is a directory
+cat: /etc/vulkan: Is a directory
+cat: /etc/wpa_supplicant: Is a directory
+cat: /etc/X11: Is a directory
+cat: /etc/xdg: Is a directory
+cat: /etc/xml: Is a directory
+cat: /etc/zfs: Is a directory
+prapeller@prapeller-VirtualBox:~/lesson4$
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+2)
+prapeller@prapeller-VirtualBox:~/lesson4$ ll /etc/ | tail | cut -d ' ' -f 1
+lrwxrwxrwx
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+
+prapeller@prapeller-VirtualBox:~/lesson4$ ll /etc/ | tail | cut -d ' ' -f 1 | sort
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+drwxr-xr-x
+lrwxrwxrwx
+-rw-r--r--
+-rw-r--r--
+-rw-r--r--
+
+prapeller@prapeller-VirtualBox:~/lesson4$ ll /etc/ | tail | cut -d ' ' -f 1 | uniq
+lrwxrwxrwx
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+drwxr-xr-x
+-rw-r--r--
+
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+3)
+prapeller@prapeller-VirtualBox:~/lesson4$ sudo vim /etc/ssh/ssh_config
+[sudo] password for prapeller:
+ 52L, 1598C written
+
+ prapeller@prapeller-VirtualBox:~/lesson4$ systemctl restart sshd
+==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
+Authentication is required to restart 'ssh.service'.
+Multiple identities can be used for authentication:
+ 1.  PabloMirosh,,, (prapeller)
+ 2.  user1
+Choose identity to authenticate as (1-2): 1
+Password:
+==== AUTHENTICATION COMPLETE ===
+
+
+restart and reload difference:
+									restart = stop + start
+									reload = remain running + re-read configuration files.
+
+
+prapeller@prapeller-VirtualBox:~/lesson4$ cat > file_name.txt
+1
+2
+3
+Ctrl + D
+The ^D character (also known as \04 or 0x4, END OF TRANSMISSION in Unicode) 
+
+prapeller@prapeller-VirtualBox:~/lesson4$ mc
+Ctrl + o
+
+prapeller@prapeller-VirtualBox:~/lesson4$ ps -A | grep mc
+   1469 ?        00:00:00 ibus-memconf
+   7726 pts/0    00:00:00 mc
+
+prapeller@prapeller-VirtualBox:~/lesson4$ kill 7726 -s 9Terminated
+

@@ -1,0 +1,151 @@
+1. Подключить репозиторий с nginx любым удобным способом, установить nginx и потом удалить nginx, используя утилиту dpkg.
+2. Установить пакет на свой выбор, используя snap.
+3. Настроить iptables: разрешить подключения только на 22-й и 80-й порты.
+4. * Настроить проброс портов локально с порта 80 на порт 8080.
+
+Кирилл Иванов・Преподаватель
+Задание предполагало удаление пакета утилитой dpkg. Можете посмотреть справку, набрав dpkg --help. Нужный ключик: "-r".
+Задачу с iptables можно было решить как с помощью политик по умолчанию (ключик "-P | --policy"), так и с помощью одних только правил.
+
+1)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+prapeller@prapeller-VirtualBox:~$ sudo apt install curl gnupg2 ca-certificates lsb-release
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+lsb-release is already the newest version (11.1.0ubuntu2).
+lsb-release set to manually installed.
+ca-certificates is already the newest version (20210119~20.10.1).
+ca-certificates set to manually installed.
+The following packages were automatically installed and are no longer required:
+  linux-headers-5.8.0-25 linux-headers-5.8.0-25-generic linux-image-5.8.0-25-generic
+  linux-modules-5.8.0-25-generic linux-modules-extra-5.8.0-25-generic
+Use 'sudo apt autoremove' to remove them.
+The following NEW packages will be installed:
+  curl gnupg2
+0 upgraded, 2 newly installed, 0 to remove and 0 not upgraded.
+Need to get 166 kB of archives.
+After this operation, 462 kB of additional disk space will be used.
+Do you want to continue? [Y/n] y
+Progress: [ 11%] [##########...................................................................................]
+Progress: [ 22%] [####################.........................................................................]
+Fetched 166 kB in 0s (703 kB/s)
+Progress: [ 33%] [##############################...............................................................]
+Progress: [ 44%] [#########################################....................................................]
+Progress: [ 67%] [#############################################################................................]
+Progress: [ 89%] [##################################################################################...........]
+Selecting previously unselected package gnupg2.
+Preparing to unpack .../gnupg2_2.2.20-1ubuntu1.1_all.deb ...
+Unpacking gnupg2 (2.2.20-1ubuntu1.1) ...
+Setting up gnupg2 (2.2.20-1ubuntu1.1) ...
+Setting up curl (7.68.0-1ubuntu4.2) ...
+Processing triggers for man-db (2.9.3-2) ...
+prapeller@prapeller-VirtualBox:~$ echo "deb http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \
+>     | sudo tee /etc/apt/sources.list.d/nginx.list
+deb http://nginx.org/packages/ubuntu groovy nginx
+prapeller@prapeller-VirtualBox:~$ curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo apt-key add -
+Warning: apt-key is deprecated. Manage keyring files in trusted.gpg.d instead (see apt-key(8)).
+OK
+prapeller@prapeller-VirtualBox:~$ sudo apt-key fingerprint ABF5BD827BD9BF62
+Warning: apt-key is deprecated. Manage keyring files in trusted.gpg.d instead (see apt-key(8)).
+pub   rsa2048 2011-08-19 [SC] [expires: 2024-06-14]
+      573B FD6B 3D8F BC64 1079  A6AB ABF5 BD82 7BD9 BF62
+uid           [ unknown] nginx signing key <signing-key@nginx.com>
+
+
+
+prapeller@prapeller-VirtualBox:~$ sudo apt update
+[sudo] password for prapeller:
+Hit:1 http://ru.archive.ubuntu.com/ubuntu groovy InRelease
+Hit:2 http://ru.archive.ubuntu.com/ubuntu groovy-updates InRelease
+Hit:3 http://ru.archive.ubuntu.com/ubuntu groovy-backports InRelease
+Get:4 http://security.ubuntu.com/ubuntu groovy-security InRelease [110 kB]
+Get:5 http://nginx.org/packages/ubuntu groovy InRelease [2 841 B]
+Get:6 http://nginx.org/packages/ubuntu groovy/nginx amd64 Packages [4 679 B]
+Get:7 http://security.ubuntu.com/ubuntu groovy-security/main amd64 DEP-11 Metadata [4 680 B]
+Get:8 http://security.ubuntu.com/ubuntu groovy-security/universe amd64 DEP-11 Metadata [4 560 B]
+Fetched 127 kB in 2s (80,6 kB/s)
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+All packages are up to date.
+N: Skipping acquire of configured file 'nginx/binary-i386/Packages' as repository 'http://nginx.org/packages/ubuntu groovy InRelease' doesn't support architecture 'i386'
+
+prapeller@prapeller-VirtualBox:~$ sudo apt install nginx
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following NEW packages will be installed:
+  nginx
+0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Need to get 3 980 B of archives.
+After this operation, 48,1 kB of additional disk space will be used.
+Get:1 http://ru.archive.ubuntu.com/ubuntu groovy/main amd64 nginx amd64 1.18.0-6ubuntu2 [3 980 B]
+Fetched 3 980 B in 0s (45,5 kB/s)
+Selecting previously unselected package nginx.
+(Reading database ... 169064 files and directories currently installed.)
+Preparing to unpack .../nginx_1.18.0-6ubuntu2_amd64.deb ...
+Unpacking nginx (1.18.0-6ubuntu2) ...
+Setting up nginx (1.18.0-6ubuntu2) ...
+
+prapeller@prapeller-VirtualBox:~$ sudo apt list nginx
+Listing... Done
+nginx/groovy,now 1.18.0-6ubuntu2 amd64 [installed]
+N: There is 1 additional version. Please use the '-a' switch to see it
+
+prapeller@prapeller-VirtualBox:~$ sudo apt remove nginx
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following packages will be REMOVED:
+  nginx
+0 upgraded, 0 newly installed, 1 to remove and 0 not upgraded.
+After this operation, 48,1 kB disk space will be freed.
+Do you want to continue? [Y/n] y
+(Reading database ... 169067 files and directories currently installed.)
+Removing nginx (1.18.0-6ubuntu2) ...
+
+2)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+prapeller@prapeller-VirtualBox:~$ sudo snap install chromium
+chromium 88.0.4324.182 from Canonical✓ installed
+
+
+3)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+prapeller@prapeller-VirtualBox:~$ sudo iptables -L
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+
+
+prapeller@prapeller-VirtualBox:~$ sudo iptables -A OUTPUT -p tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+prapeller@prapeller-VirtualBox:~$ sudo iptables -A INPUT -p tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+prapeller@prapeller-VirtualBox:~$ sudo iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+prapeller@prapeller-VirtualBox:~$ sudo iptables -A OUTPUT -p tcp --sport 80 -m conntrack --ctstate ESTABLISHED -j ACCEPT
+
+prapeller@prapeller-VirtualBox:~$ sudo iptables -L
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:ssh ctstate NEW,ESTABLISHED
+ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:http ctstate NEW,ESTABLISHED
+
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:ssh ctstate NEW,ESTABLISHED
+ACCEPT     tcp  --  anywhere             anywhere             tcp spt:http ctstate ESTABLISHED
+prapeller@prapeller-VirtualBox:~$
+
+4)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+prapeller@prapeller-VirtualBox:~$ sudo iptables -t nat -A OUTPUT -o lo -p tcp --dport 80 -j REDIRECT --to-port 8080

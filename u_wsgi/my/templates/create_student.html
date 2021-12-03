@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}
+Create student
+{% endblock %}
+{#{% block style %}#}
+{#	{% include "inc-style.html" %}#}
+{#{% endblock %}#}
+{% block menu %}
+	{% include "inc-menu.html" %}
+{% endblock %}
+
+{% block body %}
+	<div>
+		<li>
+			<a href="/student-list/">Student list</a>
+		</li>
+		<li>
+			<a href="/add-student/">Add student to course</a>
+		</li>
+	</div>
+    <div>
+        <h1>Create student:</h1>
+        <form method="post">
+            <input type="text" name="name" placeholder="enter student name here">
+            <button type="submit">create</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}
+	Main
+{% endblock %}
+{#{% block style %}#}
+{#	{% include "inc-style.html" %}#}
+{#{% endblock %}#}
+{% block menu %}
+	{% include "inc-menu.html" %}
+{% endblock %}
+{% block body %}
+	<img src="{{ static_url }}images/student.jpg" alt="student.jpg">
+	<div>
+		<ul>
+			<li>
+				<a href="/create-category/">Create new category</a>
+			</li>
+			<li>
+				<a href="/student-list/">Students list</a>
+			</li>
+			<li>
+				<a href="/create-student/">Create student</a>
+			</li>
+			<li>
+				<a href="/add-student/">Add student to course</a>
+			</li>
+		</ul>
+	</div>
+	<div>
+		<h1>Categories:</h1>
+		{% for category in categories %}
+			<li>
+				{{ category.name }} <br> Courses quantity: {{ category.count_courses() }} <br>
+				<a href="/course-list/?id={{ category.id }}">Display courses</a>
+				<br> <br>
+			</li>
+		{% endfor %}
+	</div>
+	<br>
+	<br>
+
+{% endblock %}

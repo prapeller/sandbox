@@ -1,0 +1,19 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Data Name</th>
+        <th scope="col">Value</th>
+        <th scope="col">Measured Time</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for obj in clinical_data %}
+        <tr>
+        <th scope="row">{{ obj.get_name_display }}</th>
+        <td>{{ obj.value }}</td>
+        <td>{{ obj.measured_time }}</td>
+    {% endfor %}
+
+    </tbody>
+</table>

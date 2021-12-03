@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}
+Students list
+{% endblock %}
+{#{% block style %}#}
+{#	{% include "inc-style.html" %}#}
+{#{% endblock %}#}
+{% block menu %}
+	{% include "inc-menu.html" %}
+{% endblock %}
+{% block body %}
+	<div>
+		<li>
+			<a href="/create-student/">Create student</a>
+		</li>
+		<li>
+			<a href="/add-student/">Add student to course</a>
+		</li>
+	</div>
+    <h1>Student list</h1>
+    <div>
+
+        {% for student in students %}
+        <li>
+            {{student.name}}
+            {% for course in student.courses %}
+                {{course.name}}
+            {% endfor %}
+        </li>
+        {% endfor %}
+    </div>
+{% endblock %}

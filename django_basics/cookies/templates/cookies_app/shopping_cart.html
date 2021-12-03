@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% if request.COOKIES %}
+            <table>
+                <thead>
+                <th>name</th>
+                <th>qty</th>
+                </thead>
+                {% for key, val in request.COOKIES.items %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ val }}</td>
+                    </tr>
+
+                {% endfor %}
+
+            </table>
+
+
+    {% else %}
+
+        <h1>Cart is empty</h1>
+
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,119 @@
+1. Управление пользователями:
+a) создать нового пользователя;
+b) убедиться, что информация о нем появилась в соответствующих файлах в системе;
+c) удалить созданного пользователя;
+
+2. Управление группами:
+a) создать группу;
+b) попрактиковаться в смене групп у пользователей;
+c) добавить пользователя в группу, не меняя основной;
+d) удалить пользователя из группы.
+
+3. Создать пользователя с правами суперпользователя. Проверить результат.
+4. * Используя дополнительные материалы, выдать одному из созданных пользователей право на выполнение ряда команд, требующих прав суперпользователя (команды выбираем на своё усмотрение).
+
+
+
+C:\Users\prape>ssh prapeller@192.168.100.22
+Welcome to Ubuntu 20.10 (GNU/Linux 5.8.0-43-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+0 updates can be installed immediately.
+0 of these updates are security updates.
+
+Last login: Thu Feb 11 11:04:16 2021 from 192.168.100.30
+
+prapeller@prapeller-VirtualBox:~$ sudo useradd -m -d /home/user2 -s /bin/bash user2
+prapeller@prapeller-VirtualBox:~$ sudo passwd user2
+New password:
+BAD PASSWORD: The password is a palindrome
+Retype new password:
+passwd: password updated successfully
+prapeller@prapeller-VirtualBox:~$ sudo groupadd new_users
+prapeller@prapeller-VirtualBox:~$ sudo usermod -aG new_users user2
+
+prapeller@prapeller-VirtualBox:~$ more /etc/passwd
+prapeller:x:1000:1000:PabloMirosh,,,:/home/prapeller:/bin/bash
+systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
+sshd:x:127:65534::/run/sshd:/usr/sbin/nologin
+vboxadd:x:998:1::/var/run/vboxadd:/bin/false
+user1:x:1001:1001::/home/user1:/bin/bash
+user2:x:1002:1003::/home/user2:/bin/bash
+
+prapeller@prapeller-VirtualBox:~$ more /etc/group
+prapeller:x:1000:
+sambashare:x:133:prapeller
+systemd-coredump:x:999:
+vboxsf:x:998:
+user1:x:1001:
+dev_team:x:1002:user1,prapeller
+user2:x:1003:
+new_users:x:1004:user2
+
+prapeller@prapeller-VirtualBox:~$ sudo more /etc/shadow
+prapeller:$6$WhRenldRhOf6Zprg$P7OMQbmCcXN9hIJVNVCrWS0I7sViofIYvjuf48bDN191kmGepB8wU2B.52o4Nh7fyAF94R8LAvpI
+HRtLHC3It1:18667:0:99999:7:::
+systemd-coredump:!*:18667::::::
+sshd:*:18667:0:99999:7:::
+vboxadd:!:18667::::::
+user1:$6$8GpspSEFmyDHAyrD$ONeK62AqhsoXaRF6E1Ge9xMD9cN..mX/f78Jh1B/eLKkzUS8ZJzm9Wj1lDzOQ1raByljdwOfAOKNHWsk
+ct3r70:18669:0:99999:7:::
+user2:$6$.7At2vhgdzrs5Wxf$CUpVwoUxstRWzx43w2KCn0i4nf6Gpaa.QkQ9UcJD8C7Qa.31D4ImyYhBUcLPfH0K2XYcVo3ZcLWjp/Jo
+5Woxu/:18669:0:99999:7:::
+
+prapeller@prapeller-VirtualBox:~$ sudo userdel -r user2
+userdel: user2 mail spool (/var/mail/user2) not found
+
+prapeller@prapeller-VirtualBox:~$ su user1
+user1@prapeller-VirtualBox:/home/prapeller$ groups
+user1 dev_team
+user1@prapeller-VirtualBox:/home/prapeller$ exit
+
+prapeller@prapeller-VirtualBox:~$ sudo usermod -aG new_users user1
+prapeller@prapeller-VirtualBox:~$ su user1
+Password:
+user1@prapeller-VirtualBox:/home/prapeller$ groups
+user1 dev_team new_users
+user1@prapeller-VirtualBox:/home/prapeller$ exit
+exit
+prapeller@prapeller-VirtualBox:~$ sudo deluser user1 new_users
+Removing user `user1' from group `new_users' ...
+Done.
+prapeller@prapeller-VirtualBox:~$ groups user1
+user1 : user1 dev_team
+
+prapeller@prapeller-VirtualBox:~$ sudo usermod -aG sudo user1
+prapeller@prapeller-VirtualBox:~$ groups user1
+user1 : user1 sudo dev_team
+
+prapeller@prapeller-VirtualBox:~$ su user1
+Password:
+user1@prapeller-VirtualBox:/home/prapeller$ cd /home/user1
+user1@prapeller-VirtualBox:~$ ll
+total 28
+drwxr-xr-x 2 user1     user1 4096 фев 11 12:37 ./
+drwxr-xr-x 4 root      root  4096 фев 11 13:16 ../
+-rw------- 1 user1     user1  291 фев 11 13:23 .bash_history
+-rw-r--r-- 1 user1     user1  220 июн 18  2020 .bash_logout
+-rw-r--r-- 1 user1     user1 3771 июн 18  2020 .bashrc
+-rw-rw-r-- 1 prapeller user1   18 фев 11 12:36 file.txt
+-rw-r--r-- 1 user1     user1  807 июн 18  2020 .profile
+-rw-r--r-- 1 user1     user1    0 фев 11 12:37 .sudo_as_admin_successful
+user1@prapeller-VirtualBox:~$
+user1@prapeller-VirtualBox:~$ sudo chown user1 file.txt
+[sudo] password for user1:
+user1@prapeller-VirtualBox:~$ ll
+total 28
+drwxr-xr-x 2 user1 user1 4096 фев 11 12:37 ./
+drwxr-xr-x 4 root  root  4096 фев 11 13:16 ../
+-rw------- 1 user1 user1  291 фев 11 13:23 .bash_history
+-rw-r--r-- 1 user1 user1  220 июн 18  2020 .bash_logout
+-rw-r--r-- 1 user1 user1 3771 июн 18  2020 .bashrc
+-rw-rw-r-- 1 user1 user1   18 фев 11 12:36 file.txt
+-rw-r--r-- 1 user1 user1  807 июн 18  2020 .profile
+-rw-r--r-- 1 user1 user1    0 фев 11 12:37 .sudo_as_admin_successful
+user1@prapeller-VirtualBox:~$ exit
+exit

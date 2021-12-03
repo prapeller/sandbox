@@ -1,0 +1,8 @@
+Запись вебинара
+https://d2xzmw6cctk25h.cloudfront.net/record/101182/attachment/1ce3781ea7c0df80a229a661550171b7.mp4
+
+Презентация 8. Введение в Docker
+https://docs.google.com/presentation/d/1V3iQicIHgP5ytJlhpZlFM-mDJsFT7MVUt0sAagaGuX8/edit#slide=id.g819c2089a5_1_147
+
+Методичка 8. Введение в Docker
+https://docs.google.com/document/d/19ZdWw31BuFnENlbP6n323OlrOZdXJKPsjQA0jtS5-UE/edit

@@ -1,0 +1,192 @@
+<!--https://docs.google.com/document/d/1D4ZAeYKZXbfMVoExtEhXQMBmr0fATUr6lxCT2i7MsQ0/edit?usp=sharing-->
+<!--https://youtu.be/Ek7OljZ2TSM-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<div id="id-test">
+	<h1 style="color: red">Тестовая страница</h1>
+	<div class="test-class">
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio, quis, soluta! Alias, aliquam asperiores
+			consectetur culpa error et facere fugiat ipsum molestias nemo, perspiciatis quae quam sit sunt suscipit
+			voluptatem.
+		</p>
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid autem distinctio et fugit non numquam optio
+			quod, reiciendis vel vero. Doloremque illo ipsa nihil nostrum pariatur sint temporibus. Commodi, provident?
+		</p>
+	</div>
+	<div class="test-class">
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio, quis, soluta! Alias, aliquam asperiores
+			consectetur culpa error et facere fugiat ipsum molestias nemo, perspiciatis quae quam sit sunt suscipit
+			voluptatem.
+		</p>
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid autem distinctio et fugit non numquam optio
+			quod, reiciendis vel vero. Doloremque illo ipsa nihil nostrum pariatur sint temporibus. Commodi, provident?
+		</p>
+	</div>
+</div>
+
+<!--<div id="demo"></div>-->
+<button class="btn blue hidden">Push me!</button>
+
+<!--<button onclick="alert('Hello!');alert('Bye!');">btn</button>-->
+<!--<button onclick="hello();bye();">btn</button>-->
+<!--<button id="myBtn" onclick="btnClickListener()">btn</button>-->
+<button id="myBtn">btn</button>
+<script>
+    "use strict";
+
+    // console.dir(document.getElementById('id-test'));
+    // console.log(document.getElementById('id-test').getElementsByTagName('p'));
+    // console.log(document.getElementsByClassName('test-class'));
+    // console.log(Array.from(document.getElementsByClassName('test-class')));
+    // console.log(document.getElementsByTagName('h1'));
+
+
+    // console.log(document.querySelector('.test-class:last-child'));
+    // console.dir(document.querySelector('.test-class:last-child'));
+    // console.log(document.querySelector('.test-class:last-child'));
+    // console.log(document.querySelectorAll('.test-class')); // nodelist
+    // console.log(Array.from(document.querySelectorAll('.test-class')));
+
+
+    // const h1Tag = document.querySelector('h1');
+    // console.log(h1Tag.textContent);
+    // console.log(h1Tag.innerText);
+    // console.log(h1Tag.innerHTML);
+
+    // h1Tag.textContent += '!';
+    // h1Tag.textContent += '<i>!</i>';
+    // h1Tag.innerText += '!';
+    // h1Tag.innerText += '<i>!</i>';
+    // h1Tag.innerHTML += '<i>!</i>';
+    // console.log(h1Tag.innerHTML);
+    // console.log(h1Tag.innerText);
+
+    // const demo = document.querySelector('#demo');
+    // // // // // // // // // // // // // // // // // // // // // // // // BAD
+    // for (let i = 0; i < 10; i++) {
+    //     demo.innerHTML += '<div>Element ' + i + '</div>';
+    // }
+
+    // // // // // // // // // // // // // // // // // // // // // // // // Good
+    // let totalHTMLString = '';
+    // for (let i = 0; i < 10; i++) {
+    //     totalHTMLString += '<div>Element ' + i + '</div>';
+    // }
+    // demo.innerHTML = totalHTMLString;
+
+
+    // const h1Tag = document.querySelector('h1');
+    // h1Tag.style.backgroundColor = 'yellow';
+    // // console.log(h1Tag.style);
+    // console.log(getComputedStyle(h1Tag));
+
+    // const btn = document.querySelector('.btn');
+    // console.log(btn.classList)
+    // btn.classList.add('red');
+    // console.log(btn.classList.contains('red'));
+    // console.log(btn.classList.contains('blue'));
+    // btn.classList.remove('red');
+    // console.log(btn.classList.contains('red'));
+    // btn.classList.toggle('hidden');
+    // console.log(btn.classList)
+    // btn.className = 'btn hidden yellow';
+    // console.log(btn.className);
+
+
+
+    // const myDiv = document.createElement('div');
+    // // console.log(myDiv)
+    // const i = document.createElement('i');
+    // i.textContent = 'Hello!';
+    // console.log(i)
+	//
+    // myDiv.appendChild(i);
+    // console.log(myDiv);
+    // document.body.appendChild(myDiv);
+
+
+
+    // document.body.insertAdjacentHTML('beforebegin', '<div><i>Hello!</i></div>');
+    // document.body.insertAdjacentHTML('afterbegin', '<div><i>Hello!</i></div>');
+    // document.body.insertAdjacentHTML('beforeend', '<div><i>Hello!</i></div>');
+    // document.body.insertAdjacentHTML('afterend', '<div><i>Hello!</i></div>');
+
+
+
+    //////////////////////////////////////////////////////////////////////////ADD
+    // const h1Tag = document.querySelector('h1');
+    // const parentElement = document.getElementById('id-test');
+    // const refElem = document.querySelector('.test-class:last-child');
+    // parentElement.insertBefore(h1Tag, refElem);
+
+    // const h1Tag2 = document.querySelector('h1').cloneNode(true);
+    // const parentElement = document.getElementById('id-test');
+    // const refElem = document.querySelector('.test-class:last-child');
+    // parentElement.insertBefore(h1Tag2, refElem);
+
+
+    //////////////////////////////////////////////////////////////////////////DELETE
+    // const h1Tag = document.querySelector('h1');
+    // // h1Tag.remove();
+	//
+    // // h1Tag.parentElement.removeChild(h1Tag);
+    // // h1Tag.parentElement.innerHTML = '';
+
+
+
+    //////////////////////////////////////////////////////////////////////////onclick function decomposition
+    // function btnClickListener() {
+    //     hello();
+    //     bye();
+    // }
+    // function hello(event) {
+    //     console.log(event)
+    //     alert('Hello!');
+    // }
+	//
+    // function bye() {
+    //     alert('Bye!');
+    // }
+	//
+    // const btn = document.getElementById('myBtn');
+    // // btn.onclick = btnClickListener;
+    // // // btn.onclick = hello;
+    // // // btn.onclick = bye;
+	//
+    // // btn.addEventListener('click', btnClickListener);
+    // btn.addEventListener('click', hello);
+    // btn.addEventListener('click', bye);
+    // btn.addEventListener('click', function (event) {
+    //     // console.log(event);
+    //     console.log(event.target);
+    //     console.log(event.currentTarget);
+    //     console.log('end!');
+    // });
+	//
+    // btn.removeEventListener('click', hello);
+    // btn.removeEventListener('click', bye);
+    // // btn.removeEventListener('click', function ()   {
+    // //     console.log('end!');
+    // // });
+
+
+
+    // // События документа
+    // window.addEventListener('load', function () {
+    //     //...
+    // });
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     //...
+    // });
+    // window.addEventListener('beforeunload', function () {
+    //     //...
+    // })
+</script>
+</body>
+</html>

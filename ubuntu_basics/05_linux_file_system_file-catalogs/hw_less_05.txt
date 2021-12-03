@@ -1,0 +1,259 @@
+1. Создать файл file1 и наполнить его произвольным содержимым. Скопировать его в file2. Создать символическую ссылку file3 на file1. Создать жёсткую ссылку file4 на file1. Посмотреть, какие inode у файлов. Удалить file1. Что стало с остальными созданными файлами? Попробовать вывести их на экран.
+2. Дать созданным файлам другие, произвольные имена. Создать новую символическую ссылку. Переместить ссылки в другую директорию.
+3. Создать два произвольных файла. Первому присвоить права на чтение и запись для владельца и группы, только на чтение — для всех. Второму присвоить права на чтение и запись только для владельца.
+4. Создать пользователя, обладающего возможностью выполнять действия от имени суперпользователя.
+5. * Создать группу developer и нескольких пользователей, входящих в неё. Создать директорию для совместной работы. Сделать так, чтобы созданные одними пользователями файлы могли изменять другие пользователи этой группы.
+6. * Создать в директории для совместной работы поддиректорию для обмена файлами, но чтобы удалять файлы могли только их создатели.
+7. * Создать директорию, в которой есть несколько файлов. Сделать так, чтобы открыть файлы можно было, только зная имя файла, а через ls список файлов посмотреть было нельзя.
+
+
+C:\Users\prape>ssh prapeller@192.168.100.16
+Welcome to Ubuntu 20.10 (GNU/Linux 5.8.0-43-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+0 updates can be installed immediately.
+0 of these updates are security updates.
+
+Last login: Wed Feb 24 14:34:40 2021 from 192.168.100.26
+
+1)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+prapeller@prapeller-VirtualBox:~/lesson5$ ll
+drwxrwxr-x  2 prapeller prapeller 4096 фев 24 17:01 ./
+drwxr-xr-x 18 prapeller prapeller 4096 фев 23 12:55 ../
+prapeller@prapeller-VirtualBox:~/lesson5$
+prapeller@prapeller-VirtualBox:~/lesson5$ cat > file1
+hello
+world
+goodbye
+world
+^C
+prapeller@prapeller-VirtualBox:~/lesson5$
+prapeller@prapeller-VirtualBox:~/lesson5$ ll
+total 16
+drwxrwxr-x  2 prapeller prapeller 4096 фев 24 17:03 ./
+drwxr-xr-x 18 prapeller prapeller 4096 фев 23 12:55 ../
+-rw-rw-r--  1 prapeller prapeller   26 фев 24 17:02 file1
+-rw-rw-r--  1 prapeller prapeller   26 фев 24 17:03 file2
+prapeller@prapeller-VirtualBox:~/lesson5$ ln -s file1 file3
+prapeller@prapeller-VirtualBox:~/lesson5$ ln file1 file4
+prapeller@prapeller-VirtualBox:~/lesson5$ ll -i
+total 20
+455285 drwxrwxr-x  2 prapeller prapeller 4096 фев 24 17:04 ./
+435133 drwxr-xr-x 18 prapeller prapeller 4096 фев 23 12:55 ../
+396805 -rw-rw-r--  2 prapeller prapeller   26 фев 24 17:02 file1
+455174 -rw-rw-r--  1 prapeller prapeller   26 фев 24 17:03 file2
+455963 lrwxrwxrwx  1 prapeller prapeller    5 фев 24 17:03 file3 -> file1
+396805 -rw-rw-r--  2 prapeller prapeller   26 фев 24 17:02 file4
+prapeller@prapeller-VirtualBox:~/lesson5$
+prapeller@prapeller-VirtualBox:~/lesson5$ rm file1
+prapeller@prapeller-VirtualBox:~/lesson5$ ll -i
+total 16
+455285 drwxrwxr-x  2 prapeller prapeller 4096 фев 24 17:05 ./
+435133 drwxr-xr-x 18 prapeller prapeller 4096 фев 23 12:55 ../
+455174 -rw-rw-r--  1 prapeller prapeller   26 фев 24 17:03 file2
+455963 lrwxrwxrwx  1 prapeller prapeller    5 фев 24 17:03 file3 -> file1
+396805 -rw-rw-r--  1 prapeller prapeller   26 фев 24 17:02 file4
+prapeller@prapeller-VirtualBox:~/lesson5$ cat file2
+hello
+world
+goodbye
+world
+prapeller@prapeller-VirtualBox:~/lesson5$ cat file4
+hello
+world
+goodbye
+world
+prapeller@prapeller-VirtualBox:~/lesson5$ cat file3
+cat: file3: No such file or directory
+prapeller@prapeller-VirtualBox:~/lesson5$
+
+
+при удалении жесткой ссылки (file1), зарегенная на нее мягкая ссылка перестает работать, копия жесткой ссылки на тот же inode продолжила работать
+копия файла стала другим файлом (ссылающимся на другой inode) как работала так и работает
+
+2)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+
+prapeller@prapeller-VirtualBox:~/lesson5$ ll
+total 12
+drwxrwxr-x  2 prapeller prapeller 4096 фев 24 17:23 ./
+drwxr-xr-x 18 prapeller prapeller 4096 фев 24 17:25 ../
+-rw-rw-r--  1 prapeller prapeller   26 фев 24 17:02 file1
+prapeller@prapeller-VirtualBox:~/lesson5$ ln -s file1 softlink
+prapeller@prapeller-VirtualBox:~/lesson5$ ln file1 hardlink
+
+prapeller@prapeller-VirtualBox:~/lesson5$ ll -i
+total 16
+455285 drwxrwxr-x  2 prapeller prapeller 4096 фев 24 17:26 ./
+435133 drwxr-xr-x 18 prapeller prapeller 4096 фев 24 17:25 ../
+396805 -rw-rw-r--  2 prapeller prapeller   26 фев 24 17:02 file1
+396805 -rw-rw-r--  2 prapeller prapeller   26 фев 24 17:02 hardlink
+455174 lrwxrwxrwx  1 prapeller prapeller    5 фев 24 17:26 softlink -> file1
+
+prapeller@prapeller-VirtualBox:~/lesson5$ mv hardlink ~/lesson5_links/
+mv: cannot move 'hardlink' to '/home/prapeller/lesson5_links/': Not a directory
+prapeller@prapeller-VirtualBox:~/lesson5$ mkdir ~/lesson5_links
+prapeller@prapeller-VirtualBox:~/lesson5$ mv hardlink ~/lesson5_links/
+prapeller@prapeller-VirtualBox:~/lesson5$ mv softlink ~/lesson5_links/
+
+
+prapeller@prapeller-VirtualBox:~/lesson5$ ll -i ~/lesson5_links/
+total 12
+455963 drwxrwxr-x  2 prapeller prapeller 4096 фев 24 17:27 ./
+435133 drwxr-xr-x 19 prapeller prapeller 4096 фев 24 17:27 ../
+396805 -rw-rw-r--  2 prapeller prapeller   26 фев 24 17:02 hardlink
+455174 lrwxrwxrwx  1 prapeller prapeller    5 фев 24 17:26 softlink -> file1
+
+
+prapeller@prapeller-VirtualBox:~/lesson5$ ll -i
+total 12
+455285 drwxrwxr-x  2 prapeller prapeller 4096 фев 24 17:27 ./
+435133 drwxr-xr-x 19 prapeller prapeller 4096 фев 24 17:27 ../
+396805 -rw-rw-r--  2 prapeller prapeller   26 фев 24 17:02 file1
+prapeller@prapeller-VirtualBox:~/lesson5$
+
+prapeller@prapeller-VirtualBox:~/lesson5$ cd ~/lesson5_links/
+prapeller@prapeller-VirtualBox:~/lesson5_links$ echo hello >> file1
+prapeller@prapeller-VirtualBox:~/lesson5_links$ ll -i
+total 16
+455963 drwxrwxr-x  2 prapeller prapeller 4096 фев 24 17:32 ./
+435133 drwxr-xr-x 19 prapeller prapeller 4096 фев 24 17:27 ../
+456471 -rw-rw-r--  1 prapeller prapeller    6 фев 24 17:32 file1
+396805 -rw-rw-r--  2 prapeller prapeller   26 фев 24 17:31 hardlink
+455174 lrwxrwxrwx  1 prapeller prapeller    5 фев 24 17:26 softlink -> file1
+prapeller@prapeller-VirtualBox:~/lesson5_links$ more softlink
+hello
+prapeller@prapeller-VirtualBox:~/lesson5_links$ more hardlink
+hello
+world
+goodbye
+world
+
+до перемещения softlink была в другой папке и ссылалась на file1,
+после перемещения в новой папке не было файла под названием file1, но после создания файла с таким именем - мягкая ссылка начала ссылаться на новый file1
+мягкой ссылке неважно какой файл читать, главное чтоб имя совпадало
+а hardlink продолжила ссылаться на тот же файл, на который ссылалась и до перемещения
+
+3)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+prapeller@prapeller-VirtualBox:~/lesson5$ ll
+total 12
+drwxrwxr-x  2 prapeller prapeller 4096 фев 24 17:27 ./
+drwxr-xr-x 18 prapeller prapeller 4096 фев 24 17:39 ../
+-rw-rw-r--  1 prapeller prapeller   26 фев 24 17:31 file1
+prapeller@prapeller-VirtualBox:~/lesson5$ echo hello > file2
+prapeller@prapeller-VirtualBox:~/lesson5$ ll
+total 16
+drwxrwxr-x  2 prapeller prapeller 4096 фев 24 17:39 ./
+drwxr-xr-x 18 prapeller prapeller 4096 фев 24 17:39 ../
+-rw-rw-r--  1 prapeller prapeller   26 фев 24 17:31 file1
+-rw-rw-r--  1 prapeller prapeller    6 фев 24 17:39 file2
+prapeller@prapeller-VirtualBox:~/lesson5$
+
+
+prapeller@prapeller-VirtualBox:~/lesson5$ chmod ug=rw file1
+prapeller@prapeller-VirtualBox:~/lesson5$ chmod o=r file1
+prapeller@prapeller-VirtualBox:~/lesson5$ ll
+total 16
+drwxrwxr-x  2 prapeller prapeller 4096 фев 24 17:39 ./
+drwxr-xr-x 18 prapeller prapeller 4096 фев 24 17:39 ../
+-rw-rw-r--  1 prapeller prapeller   26 фев 24 17:31 file1
+-rw-rw-r--  1 prapeller prapeller    6 фев 24 17:39 file2
+
+prapeller@prapeller-VirtualBox:~/lesson5$ chmod u=rw,g-rw,o-r file2
+prapeller@prapeller-VirtualBox:~/lesson5$ ll
+total 16
+drwxrwxr-x  2 prapeller prapeller 4096 фев 24 17:39 ./
+drwxr-xr-x 18 prapeller prapeller 4096 фев 24 17:39 ../
+-rw-rw-r--  1 prapeller prapeller   26 фев 24 17:31 file1
+-rw-------  1 prapeller prapeller    6 фев 24 17:39 file2
+prapeller@prapeller-VirtualBox:~/lesson5$
+
+4)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+prapeller@prapeller-VirtualBox:~/lesson5$ sudo useradd -m -d /home/user2 -s /bin/bash user2
+prapeller@prapeller-VirtualBox:~/lesson5$ sudo passwd user2
+New password:
+BAD PASSWORD: The password is shorter than 8 characters
+Retype new password:
+passwd: password updated successfully
+prapeller@prapeller-VirtualBox:~/lesson5$ sudo usermod -aG sudo user2
+prapeller@prapeller-VirtualBox:~/lesson5$ groups user2
+user2 : user2 sudo
+
+5)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+prapeller@prapeller-VirtualBox:~/lesson5$ sudo useradd -m -d /home/dev1 -s /bin/bash dev1
+prapeller@prapeller-VirtualBox:~/lesson5$ sudo useradd -m -d /home/dev2 -s /bin/bash dev2
+prapeller@prapeller-VirtualBox:~/lesson5$ sudo useradd -m -d /home/dev3 -s /bin/bash dev3
+prapeller@prapeller-VirtualBox:~/lesson5$ sudo usermod -aG developer dev1
+prapeller@prapeller-VirtualBox:~/lesson5$ sudo usermod -aG developer dev2
+prapeller@prapeller-VirtualBox:~/lesson5$ sudo usermod -aG developer dev3
+prapeller@prapeller-VirtualBox:~/lesson5$ tail /etc/group
+sambashare:x:133:prapeller
+systemd-coredump:x:999:
+vboxsf:x:998:
+dev_team:x:1002:
+new_users:x:1004:
+user2:x:1001:
+developer:x:1005:dev1,dev2,dev3
+dev1:x:1006:
+dev2:x:1003:
+dev3:x:1007:
+
+prapeller@prapeller-VirtualBox:~/lesson5$ mkdir dev_dir
+prapeller@prapeller-VirtualBox:~/lesson5$ cd dev_dir/
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir$ ll
+total 8
+drwxrwxr-x 2 prapeller prapeller 4096 фев 24 18:16 ./
+drwxrwxr-x 3 prapeller prapeller 4096 фев 24 18:16 ../
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir$ chmod g=rwx,o-rwx .
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir$ ll
+total 8
+drwxrwx--- 2 prapeller prapeller 4096 фев 24 18:16 ./
+drwxrwxr-x 3 prapeller prapeller 4096 фев 24 18:16 ../
+
+
+
+6)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir$ mkdir share_dir
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir$ cd share_dir/
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir/share_dir$ ll
+total 8
+drwxrwxr-x 2 prapeller prapeller 4096 фев 24 18:21 ./
+drwxrwx--- 3 prapeller prapeller 4096 фев 24 18:21 ../
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir/share_dir$ chmod +t .
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir/share_dir$ ll
+total 8
+drwxrwxr-t 2 prapeller prapeller 4096 фев 24 18:21 ./
+drwxrwx--- 3 prapeller prapeller 4096 фев 24 18:21 ../
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir/share_dir$
+
+
+7)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir/share_dir$ cd ..
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir$ mkdir hidden_files
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir$ cd hidden_files/
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir/hidden_files$ touch .file1
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir/hidden_files$ touch .file2
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir/hidden_files$ ls
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir/hidden_files$
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir/hidden_files$ ll
+total 8
+drwxrwxr-x 2 prapeller prapeller 4096 фев 24 18:38 ./
+drwxrwx--- 4 prapeller prapeller 4096 фев 24 18:31 ../
+-rw-rw-r-- 1 prapeller prapeller    0 фев 24 18:38 .file1
+-rw-rw-r-- 1 prapeller prapeller    0 фев 24 18:38 .file2
+prapeller@prapeller-VirtualBox:~/lesson5/dev_dir/hidden_files$
+
+

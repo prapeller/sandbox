@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>{{ title|title }}</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if students %}
+
+        <table>
+            <th>Id</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Test score</th>
+            <th>Courses</th>
+            <th>Headman</th>
+            <th>Card Number</th>
+            <th>Actions</th>
+
+            {% for student in students %}
+                <tr>
+                    <td>{{ student.pk }}</td>
+                    <td>{{ student.first_name }}</td>
+                    <td>{{ student.last_name }}</td>
+                    <td>{{ student.test_score }}</td>
+                    <td>
+                        {#                    {% for course in student.course_set.all %}#}
+                        {#                        {{ course }}<br>#}
+                        {#                    {% endfor %}#}
+                        {#                        <br>#}
+                        {% for course in student.courses.all %}
+                            {{ course }}<br>
+                        {% endfor %}
+                    </td>
+                    <td> {% if student.headman %}
+                        {{ student.headman }}
+                    {% else %}
+                        <h1>💣</h1>
+                    {% endif %} </td>
+                    <td><a href="{% url 'students:card_update' student.studentcard.pk %}">{{ student.studentcard }} </a></td>
+                    <td><a class="nav-link" href="{% url 'students:update' student.pk %}">Update</a> <a class="nav-link" href="{% url 'students:delete' student.pk %}">Delete</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    {% else %}
+
+        <h1>No students found :(</h1>
+
+    {% endif %}
+
+    <a class="btn btn-success" href="{% url 'students:add' %}" role="button">Add</a>
+
+{% endblock %}

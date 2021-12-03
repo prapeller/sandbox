@@ -1,0 +1,8 @@
+Shipment number: 1
+from: Main Warehouse (Moscow)
+to: Samara Department Warehouse (Samara)
+
+Printer HP Laser 107a        7050 rub
+Printer HP Laser 107a        7000 rub
+Printer Canon Pixma TS704    5900 rub
+Printer Canon Pixma TS704    5926 rub

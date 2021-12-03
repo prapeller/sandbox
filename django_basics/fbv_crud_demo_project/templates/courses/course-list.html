@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>{{ title|title }}</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if courses %}
+
+        <table>
+            <th>Id</th>
+            <th>Course name</th>
+            <th>Description</th>
+            <th>Students</th>
+            <th>Rating</th>
+            <th>Actions</th>
+
+            {% for course in courses %}
+                <tr>
+                    <td>{{ course.pk }}</td>
+                    <td>{{ course.name }}</td>
+                    <td>{{ course.description }}</td>
+
+                    <td>
+                        {% for student in course.students.all %}
+                            {{ student }}<br>
+                        {% endfor %}
+                    </td>
+                    <td>{{ course.rating }}</td>
+                    <td><a class="nav-link" href="{% url 'courses:update' course.pk%}">Update</a> <a class="nav-link" href="{% url 'courses:delete' course.pk%}">Delete</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    {% else %}
+
+        <h1>No courses found :(</h1>
+
+    {% endif %}
+
+    <a class="btn btn-success" href="{% url 'courses:add' %}" role="button">Add</a>
+
+{% endblock %}

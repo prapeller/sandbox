@@ -1,0 +1,20 @@
+<!doctype html>
+{% load static %}
+{% get_static_prefix as STATIC_PREFIX %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>employee template</title>
+    <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/emp.css">
+</head>
+<body>
+<h1>employee details:</h1>
+<p>ID: {{ id }}</p>
+<p>Name: {{ name }}</p>
+<p>Salary: {{ sal }}</p>
+<img src="{{ STATIC_PREFIX }}images/1.jpg" alt="orange">
+<img src="{% static "images/1.jpg" %}" alt="orange">
+</body>
+</html>

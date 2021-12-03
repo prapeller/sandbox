@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>{{ title|title }}</title>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+
+        First name:<input type="text" name="first_name" value="{{ student.first_name }}"><br>
+        Last name:<input type="text" name="last_name" value="{{ student.last_name }}"><br>
+        Test score:<input type="number" name="test_score" value="{{ student.test_score }}"><br>
+        <a class="nav-link" href="{% url 'students:update' student.pk%}">Update</a><br>
+        <a class="nav-link" href="{% url 'students:delete' student.pk%}">Delete</a><br>
+
+
+    </form>
+
+
+{% endblock %}

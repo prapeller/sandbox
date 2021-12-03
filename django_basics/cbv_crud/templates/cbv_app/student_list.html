@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>{{ title|title }}</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if student_list %}
+
+        <table>
+            <th>Id</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Test score</th>
+
+            {% for student in student_list %}
+
+                <tr>
+                    <td><a href="{% url 'students:detail' student.pk %}">{{ student.pk }}</a></td>
+                    <td>{{ student.first_name | capfirst }}</td>
+                    <td>{{ student.last_name | capfirst }}</td>
+                    <td>{{ student.test_score | add:'2' }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    {% else %}
+
+        <h1>No students found :(</h1>
+
+    {% endif %}
+
+    <a class="btn btn-success" href="{% url 'students:create' %}" role="button">Create</a>
+
+{% endblock %}

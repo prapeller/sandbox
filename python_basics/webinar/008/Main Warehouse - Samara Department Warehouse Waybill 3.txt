@@ -1,0 +1,7 @@
+Shipment number: 3
+from: Main Warehouse (Moscow)
+to: Samara Department Warehouse (Samara)
+
+Copier Pantum M6500W        11000 rub
+Copier Pantum M6500W        10999 rub
+Copier Pantum M6500W        12000 rub

@@ -1,0 +1,25 @@
+{% load static %}
+{% get_static_prefix as STATIC_PREFIX %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Products</title>
+    <link rel="stylesheet" href="{{ STATIC_PREFIX }}/css/style.css">
+</head>
+<body>
+<h1>{{ heading }}</h1>
+<ul>
+    <li>{{ product1 }}</li>
+    <img src="{{ STATIC_PREFIX }}{{ product1_img }}" alt="">
+    <li>{{ product2 }}</li>
+    <img src="{{ STATIC_PREFIX }}{{ product2_img }}" alt="">
+    <li>{{ product3 }}</li>
+    <img src="{{ STATIC_PREFIX }}{{ product3_img }}" alt="">
+</ul>
+
+</body>
+</html>

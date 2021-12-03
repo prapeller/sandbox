@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ title }}</title>
+</head>
+<body>
+
+{% if projects %}
+    <table>
+        <th>name</th>
+        <th>priority</th>
+        <th>assinged_to</th>
+        <th>start_date</th>
+        <th>end_date</th>
+
+        {% for p in projects %}
+            <tr>
+                <td>{{ p.name }}</td>
+                <td>{{ p.priority }}</td>
+                <td>{{ p.assigned_to }}</td>
+                <td>{{ p.start_date }}</td>
+                <td>{{ p.end_date }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>no projects yet</p>
+{% endif %}
+
+</body>
+</html>

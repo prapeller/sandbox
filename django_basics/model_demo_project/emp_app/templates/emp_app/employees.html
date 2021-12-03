@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Employees</title>
+</head>
+<body>
+template from BASEDIR/emp_app/templates/emp_app/:
+<h1>Employees:</h1>
+<br>
+{% if employees %}
+    <table>
+        <thead>
+        <th>first name</th>
+        <th>last name</th>
+        <th>email</th>
+        <th>salary</th>
+        </thead>
+        {% for emp in employees %}
+            <tbody>
+            <td>{{ emp.first_name }}</td>
+            <td>{{ emp.last_name }}</td>
+            <td>{{ emp.email }}</td>
+            <td>{{ emp.salary }}</td>
+            </tbody>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>no employees created yet</p>
+{% endif %}
+
+</body>
+</html>

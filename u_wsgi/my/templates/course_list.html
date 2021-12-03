@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}
+Course list
+{% endblock %}
+{#{% block style %}#}
+{#	{% include "inc-style.html" %}#}
+{#{% endblock %}#}
+{% block menu %}
+	{% include "inc-menu.html" %}
+{% endblock %}
+{% block body %}
+
+	<button><a href="/create-course/?id={{category.id}}">Create Course</a></button>
+
+    <div>
+        <h1>Courses of category "{{category.name}}"</h1>
+        {% for course in courses %}
+        <li>
+            {{course.name}}
+        </li>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}

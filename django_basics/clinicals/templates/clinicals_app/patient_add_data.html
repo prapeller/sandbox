@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title> {{ title | title }}</title>
+{% endblock %}
+
+{% block content %}
+
+    First Name: {{ patient.first_name }}<br>
+    Last Name: {{ patient.last_name }}<br>
+    Age: {{ patient.age }}<br>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ clinical_data_form.as_p }}
+        <input type="submit" value="Add">
+    </form>
+
+    <a class="btn btn-success" href="{% url 'patients:list' %}">Back to Patients list</a>
+
+{% endblock %}
+
+

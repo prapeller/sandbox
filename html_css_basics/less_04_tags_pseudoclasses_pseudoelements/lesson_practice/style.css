@@ -1,0 +1,133 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+.header {
+    background-color: #ccc;
+}
+
+.footer {
+    color: white;
+    background-color: grey;
+    /*overflow: hidden;*/
+    clear: both;
+}
+
+.text-red {
+    color: red;
+    width: 100%;
+    height: 500px;
+}
+
+
+.task_3_class {
+    border: 1px solid #000;
+    width: 350px;
+    height: 250px;
+    margin: 50px 0 50px 20px;
+    padding:32px;
+    box-sizing: border-box;
+}
+
+.bt_headding {
+    margin: 50px 50px 50px 50px;
+    background-color: #ccc;
+    overflow: hidden;
+}
+
+bt_headding:hover {
+    color:red;
+}
+
+.block_2 {
+    margin: 30px 50px 50px;
+    width: 150px;
+    height: 150px;
+    border: 1px solid #000;
+    float: left;
+}
+
+.text_after_block_2 {
+    margin: 50px;
+}
+
+.menu {
+    margin: 50px 50px 50px 50px;
+    clear: both;
+}
+
+.menu__list {
+    list-style-type: none;
+    border: 1px solid #000;
+    padding: 10px;
+}
+
+.menu__list:first-child {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.menu__list:last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.menu__link:hover {
+    color: red;
+    text-decoration: none;
+}
+
+.menu__li_new:after {
+    content: ' brand new!!!!';
+    color: red;
+}
+
+.menu__li:nth-child(2)::before {
+    content: '!!! ';
+    color: orange;
+}
+
+.menu__li:before {
+    content: '*** ';
+    color: orange;
+}
+
+.menu__li_new:before {
+    content: ' discount!!!!!';
+    color: red;
+}
+
+.menu__li:hover::after {
+    content: '<---- click me';
+}
+
+.product {
+    width: 150px;
+    margin: 50px 50px 50px 50px ;
+    border: 1px solid #000;
+}
+
+.product__img {
+    background-color: green;
+    width: 150px;
+    height: 150px;
+    border: 1px solid #000;
+}
+
+.product__text {
+    margin: 10px 10px 10px 10px;
+}
+
+.discount::after {
+    content: '!!!discount!!!';
+    text-transform: uppercase;
+    color: red;
+}
+.last_text {
+    margin: 20px;
+}
+.last_text::first-letter {
+    color: red;
+    font-size: 40px;
+}

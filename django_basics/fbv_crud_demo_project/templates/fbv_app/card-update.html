@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>{{ title|title }}</title>
+{% endblock %}
+
+{% block content %}
+    <form method="post"
+{#          action="{% url 'students:update' student.pk %}"#}
+    >
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <input type="submit" value="update and stay"><br>
+        <input type="submit" name="update_and_to_list" value="update and go back to list">
+
+    </form>
+
+
+{% endblock %}

@@ -1,0 +1,11 @@
+Запись вебинара
+https://d2xzmw6cctk25h.cloudfront.net/record/100090/attachment/86ca028ebaa17522495196dcc30bd5ff.mp4
+
+_Введение в Linux. Программирование bash.docx
+https://d2xzmw6cctk25h.cloudfront.net/asset/2743271/attachment/41faa49ba6d152085d16ad8e555e8b0f.docx
+
+Презентация. Урок 6. Введение в скрипты bash. Планировщик задач crontab & at
+https://docs.google.com/presentation/d/168Mg5yohUD_wSHEikJS6IzQ_ndplkigb5uW2QVio_M8/edit#slide=id.g819c2089a5_1_147
+
+Методичка 6. Введение в скрипты bash. Планировщики задач crontab и at
+https://docs.google.com/document/d/1L4BLulttiVcQCgdMJe7X8aX2hG1us9GZXhXqaQFISKQ/edit#heading=h.endx50hn2k1x
