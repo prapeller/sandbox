@@ -1,0 +1,17 @@
+# aint markup language
+# superset of JSON
+#simple types: lists, objs, dicts
+#yaml validator
+customer_name: Pavel
+orderid: 123
+date: 12/12/2020
+is_shipped: false
+more_data: null
+products:
+  - name: macbook
+  - name: iphone
+  - name: desktop
+address:
+  street: Suzdalskaya
+  city: Moscow
+  zipcode: 111673
