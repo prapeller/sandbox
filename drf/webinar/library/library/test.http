@@ -1,0 +1,48 @@
+GET http://localhost:8000/api/get_authors/
+
+###
+
+GET http://localhost:8000/api/get_authors/7
+
+###
+
+GET http://localhost:8000/api/get_bios/1
+
+###
+
+GET http://localhost:8000/api/get_books/1
+
+###
+
+POST http://localhost:8000/api/post_authors/
+Content-Type: application/json
+
+{
+  "id": 7,
+  "first_name": "Fedorica",
+  "last_name": "DostoЖЁвскaya",
+  "birth_year": 2022
+}
+
+###
+
+PATCH http://localhost:8000/api/post_authors/6/
+Content-Type: application/json
+
+{
+  "birth_year": 920
+}
+
+###
+
+PUT http://localhost:8000/api/post_authors/6/
+Content-Type: application/json
+
+{
+  "first_name": "Fedor",
+  "last_name": "Dostoevsky",
+  "birth_year": 1900
+}
+
+###
+
