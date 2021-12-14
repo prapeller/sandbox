@@ -1,45 +1,52 @@
 from django.shortcuts import render
-from fbv_app import models, serializers
-from rest_framework import response, status
+from .models import Student
+from .serializers import StudentSerializer
+from rest_framework import status
+from rest_framework.response import Response
+from django.http import HttpResponse
+from rest_framework.renderers import JSONRenderer
+from rest_framework.decorators import api_view
 
 
+@api_view(['GET', 'POST'])
 def student_list(request):
     """processing get/post methods for list of Student objects"""
 
     if request.method == 'GET':
-        students = models.Student.objects.all()
-        serializer = serializers.StudentSerializer(students, many=True)
-        return response.Response(serializer.data)
+        students = Student.objects.all()
+        serializer = StudentSerializer(students, many=True)
+        return Response(serializer.data)
 
     elif request.method == 'POST':
-        serializer = serializers.StudentSerializer(data=request.data)
+        serializer = StudentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return response.Response(serializer.data,
-                                     status=status.HTTP_201_CREATED)
-        return response.Response(serializer.errors,
-                                 status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data,
+                            status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def student_detail(request, pk):
-    """processing get/put/patch methods for Student object"""
+    """processing get/put/patch/delete methods for Student object"""
     try:
-        student = models.Student.objects.get(pk=pk)
-    except models.Student.DoesNotExist:
-        return response.Response(status=status.HTTP_404_NOT_FOUND)
+        student = Student.objects.get(pk=pk)
+    except Student.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = serializers.StudentSerializer(student)
-        return response.Response(serializer.data)
+        serializer = StudentSerializer(student)
+        return Response(serializer.data)
 
-    elif request.method == 'PUT':
-        serializer = serializers.StudentSerializer(student, data=request.data)
+    elif request.method == 'PUT' or request.method == 'PATCH':
+        serializer = StudentSerializer(student, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return response.Response(serializer.data)
-        return response.Response(serializer.errors,
-                                 status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data)
+        return Response(serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
         student.delete()
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)

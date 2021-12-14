@@ -1,0 +1,15 @@
+POST http://localhost:8000/api/students/
+Content-Type: application/json
+
+{
+  "id": 3,
+  "name": "st3",
+  "score": "90.000"
+}
+
+###
+
+GET http://localhost:8000/api/students/
+Accept: application/json
+
+###
