@@ -9,9 +9,17 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework import mixins, generics
+from rest_framework import viewsets
 
 
+# CBV ModelViewSets
 
+class StudentModelViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+
+"""
 # CBV generics
 
 class StudentList(generics.ListCreateAPIView):
@@ -22,7 +30,7 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 
-
+"""
 
 """
 # CBV mixins + GenericAPIView
@@ -56,7 +64,6 @@ class StudentDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.D
         return self.destroy(request, pk)
 
 """
-
 
 """
 # CBV APIView
