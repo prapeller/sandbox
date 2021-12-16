@@ -17,33 +17,59 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter, SimpleRouter
 # BaseRouter
-from authors.views import AuthorViewSet, get_authors_view, post_authors_view, get_bio_view, \
-    get_book_view, BioViewSet
+from authors.views import authors_list_view, authors_detail_view, bios_view, books_view, \
+    AuthorViewSet, FilteredAuthorModelViewSet
+from authors.views import AuthorListGenericViewSet, AuthorDetailGenericViewSet
+from authors.views import authors_list_api_view, authors_detail_api_view
+from authors.views import GenApiAuthorList, GenApiAuthorDetail
+from authors.views import AuthorModelViewSet, BioModelViewSet, AuthorList, AuthorDetail
+from authors.views import ActionedAuthorModelViewSet
+from authors.views import KwargsParamsAuthorModelViewSet
+from authors.views import QueryParamsAuthorModelViewSet
+from authors.views import PaginatedAuthorModelViewSet
 
-# /authors/ - GET, POST
-# /authors/1/ - GET 1, PUT, PUT/PATCH/ DELETE
 
-# router = DefaultRouter()
-router = SimpleRouter()
-router.register('authors', AuthorViewSet)
-router.register('bios', BioViewSet)
+router = DefaultRouter()
+# router = SimpleRouter()
+router.register('modelviewset_authors', AuthorModelViewSet)
+router.register('modelviewset_bios', BioModelViewSet)
+
+router.register('genviewset_list_authors', AuthorListGenericViewSet)
+router.register('genviewset_detail_authors', AuthorDetailGenericViewSet)
+
+router.register('actioned_authors', ActionedAuthorModelViewSet)
+router.register('params_authors', QueryParamsAuthorModelViewSet)
+router.register('filtered_authors', FilteredAuthorModelViewSet)
+router.register('paginated_authors', PaginatedAuthorModelViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    path('fbv/authors/', authors_list_view),
+    path('fbv/authors/<int:pk>/', authors_detail_view),
+
+    path('fbv/apiview_authors/', authors_list_api_view),
+    path('fbv/apiview_authors/<int:pk>/', authors_detail_api_view),
+
+    path('cbv/authors/', AuthorList.as_view()),
+    path('cbv/authors/<int:pk>/', AuthorDetail.as_view()),
+
+    path('cbv/genapi_authors/', GenApiAuthorList.as_view()),
+    path('cbv/genapi_authors/<int:pk>/', GenApiAuthorDetail.as_view()),
+
+    path('cbv/viewset_authors/', AuthorViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('cbv/viewset_authors/<int:pk>/', AuthorViewSet.as_view({'get': 'retrieve',
+                                                                 'put': 'update',
+                                                                 'patch': 'partial_update',
+                                                                 'delete': 'destroy'})),
+
+    path('cbv/genviewset_authors/', AuthorListGenericViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('cbv/genviewset_authors/<int:pk>/', AuthorDetailGenericViewSet.as_view({'get': 'retrieve',
+                                                                 'put': 'update',
+                                                                 'patch': 'partial_update',
+                                                                 'delete': 'destroy'})),
+
+    path('params_authors/<str:name>/', KwargsParamsAuthorModelViewSet.as_view({'get': 'list'})),
     path('api/', include(router.urls)),
 
-    path('api/get_authors/', get_authors_view),
-    path('api/get_authors/<int:pk>/', get_authors_view),
-    path('api/post_authors/', post_authors_view),
-    path('api/post_authors/<int:pk>/', post_authors_view),
-
-    path('api/get_bios/', get_bio_view),
-    path('api/get_bios/<int:pk>/', get_bio_view),
-    # path('api/post_bios/', post_bio_view),
-    # path('api/post_bios/<int:pk>/', post_bio_view),
-
-    path('api/get_books/', get_book_view),
-    path('api/get_books/<int:pk>/', get_book_view),
-    # path('api/post_books/', post_book_view),
-    # path('api/post_books/<int:pk>/', post_book_view),
 ]
