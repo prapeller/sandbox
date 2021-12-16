@@ -11,6 +11,22 @@ from rest_framework.views import APIView
 from rest_framework import mixins, generics
 
 
+
+# CBV generics
+
+class StudentList(generics.ListCreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+
+
+"""
+# CBV mixins + GenericAPIView
+
 class StudentList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
@@ -39,9 +55,11 @@ class StudentDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.D
     def delete(self, request, pk):
         return self.destroy(request, pk)
 
+"""
+
 
 """
-CBV APIView
+# CBV APIView
 
 class StudentList(APIView):
     def get(self, request):
