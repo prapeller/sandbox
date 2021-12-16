@@ -8,7 +8,40 @@ from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+from rest_framework import mixins, generics
 
+
+class StudentList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+
+class StudentDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
+                    generics.GenericAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    def get(self, request, pk):
+        return self.retrieve(request, pk)
+
+    def put(self, request, pk):
+        return self.update(request, pk)
+
+    def patch(self, request, pk):
+        return self.partial_update(request, pk)
+
+    def delete(self, request, pk):
+        return self.destroy(request, pk)
+
+
+"""
+CBV APIView
 
 class StudentList(APIView):
     def get(self, request):
@@ -56,3 +89,6 @@ class StudentDetail(APIView):
         student = self.get_object(pk)
         student.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+"""
