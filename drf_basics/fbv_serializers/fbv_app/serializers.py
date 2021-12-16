@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from fbv_app.models import Student
+from .models import Student
 
 
 class StudentSerializer(ModelSerializer):
