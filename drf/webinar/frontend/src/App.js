@@ -1,7 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
 import React from "react";
+import {HashRouter, BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import AuthorList from "./components/AuthorList";
+import BookList from "./components/BookList";
+import AuthorBooks from "./components/AuthorBooks";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
 import axios from "axios";
 
 
@@ -9,19 +14,30 @@ class App extends React.Component {
     constructor(prop) {
         super(prop);
         this.state = {
-            'authors': []
+            'authors': [],
+            'books': []
 
         }
     }
 
     componentDidMount() {
-        axios.get('http://127.0.0.1:8000/api/authors/').then(response => {
+        axios.get('http://127.0.0.1:8000/api/modelviewset_authors/').then(response => {
             const authors = response.data
             this.setState({
                 'authors': authors
             })
         }).catch(error => {
-            console.log(error)})
+            console.log(error)
+        })
+
+        axios.get('http://127.0.0.1:8000/api/modelviewset_books/').then(response => {
+            const books = response.data
+            this.setState({
+                'books': books
+            })
+        }).catch(error => {
+            console.log(error)
+        })
 
 
     }
@@ -29,13 +45,29 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <AuthorList authors={this.state.authors}/>
+                {/*<HashRouter>*/}
+                <BrowserRouter>
+                    <Header/>
+
+                    <Routes>
+                        <Route exact path='/' element={<h1>hello</h1>}/>
+                        <Route exact path='/authorss' element={<Navigate to="/"/>}/>
+                        <Route exact path='/authors' element={<AuthorList authors={this.state.authors}/>}/>
+                        <Route exact path='/books' element={<BookList books={this.state.books}/>}/>
+                        <Route exact path='/authorbooks/:id' element={<AuthorBooks books={this.state.books}/>}/>
+                        <Route path='*' element={<main><p>nothing here, 404, page not found, get out of here</p></main>}/>
+                    </Routes>
+
+                    <Footer/>
+                </BrowserRouter>
             </div>
         )
     }
 }
 
-// function App() {
+// function App()
+//
+//     {
 //     return (
 //         <div className="App">
 //             <header className="App-header">

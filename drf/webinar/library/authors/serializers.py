@@ -1,7 +1,7 @@
 from rest_framework.serializers import Serializer, ModelSerializer, CharField, IntegerField, \
     ValidationError, StringRelatedField
 
-from .models import Author, Bio
+from .models import Author, Bio, Book
 
 
 # class AuthorSerializer(HyperlinkedModelSerializer):
@@ -40,15 +40,6 @@ class AuthorSerializer(Serializer):
         return attrs
 
 
-class BioModelSerializer(ModelSerializer):
-    # author = AuthorModelSerializer()
-    author = StringRelatedField()
-
-    class Meta:
-        model = Bio
-        fields = '__all__'
-
-
 class BioSerializer(Serializer):
     text = CharField(max_length=64)
     author = AuthorSerializer()
@@ -57,3 +48,18 @@ class BioSerializer(Serializer):
 class BookSerializer(Serializer):
     name = CharField(max_length=64)
     authors = AuthorSerializer(many=True)
+
+
+class BioModelSerializer(ModelSerializer):
+    # author = AuthorModelSerializer()
+    # author = StringRelatedField()
+
+    class Meta:
+        model = Bio
+        fields = '__all__'
+
+class BookModelSerializer(ModelSerializer):
+    class Meta:
+        model = Book
+        fields = '__all__'
+

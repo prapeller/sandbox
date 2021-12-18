@@ -18,7 +18,7 @@ from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, \
     RetrieveModelMixin, DestroyModelMixin
 
-from .serializers import AuthorModelSerializer, BioModelSerializer
+from .serializers import AuthorModelSerializer, BioModelSerializer, BookModelSerializer
 from .serializers import AuthorSerializer, BioSerializer, BookSerializer
 from .models import Author, Bio, Book
 
@@ -338,11 +338,17 @@ class BioModelViewSet(ModelViewSet):
     serializer_class = BioModelSerializer
 
 
+class BookModelViewSet(ModelViewSet):
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+    queryset = Book.objects.all()
+    serializer_class = BookModelSerializer
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                          action
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
 
 class ActionedAuthorModelViewSet(ModelViewSet):
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
