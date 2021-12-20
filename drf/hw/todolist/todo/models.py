@@ -6,7 +6,7 @@ from users.models import User
 class Project(models.Model):
     name = models.CharField(max_length=64)
     link = models.URLField()
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='projects')
 
 
 class Todo(models.Model):
