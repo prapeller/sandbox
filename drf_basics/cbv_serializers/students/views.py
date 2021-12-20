@@ -10,13 +10,57 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework import mixins, generics
 from rest_framework import viewsets
-
+from rest_framework.pagination import LimitOffsetPagination
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+from rest_framework.permissions import IsAuthenticated
 
 # CBV ModelViewSets
+
+class StudentPagination(LimitOffsetPagination):
+    default_limit = 3
 
 class StudentModelViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+    pagination_class = StudentPagination
+    # filter_backends = [DjangoFilterBackend]
+    # exact matches filter
+    # filterset_fields = ['name', 'score']
+
+    filter_backends = [filters.SearchFilter]
+    # through all fields 'contains' filter
+    # search_fields = ['name', 'score']
+
+    # ^ startswith filter
+    # search_fields = ['^name', 'score']
+
+    # = exact matches filter
+    # search_fields = ['=name', 'score']
+
+    # @ full-text filter (posgres only)
+    # search_fields = ['@name', 'score']
+
+    # $ regex filter
+    # search_fields = ['$name', 'score']
+
+    filter_backends.append(filters.OrderingFilter)
+    ordering_fields = ['name', 'score']
+    # for default ordering
+    ordering = ['-score']
+
+    # custom filter
+    # def get_queryset(self):
+    #     queryset = Student.objects.all()
+    #     name = self.request.query_params.get('name')
+    #     score = self.request.query_params.get('score')
+    #     if name:
+    #         queryset = queryset.filter(name__contains=name)
+    #     if score:
+    #         queryset = queryset.filter(score=score)
+    #     return queryset
+
+    permission_classes = (IsAuthenticated,)
 
 
 """
