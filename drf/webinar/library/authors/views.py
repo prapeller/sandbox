@@ -1,26 +1,22 @@
 import io
-import json
 
-import django.http
-from django.http import HttpResponse, HttpResponseServerError, Http404
-from rest_framework.response import Response
-
-from django.shortcuts import render
+import rest_framework.permissions
+from django.http import HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
-from rest_framework.viewsets import ModelViewSet, ViewSet, GenericViewSet
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
-from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view, renderer_classes, action
-from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView, CreateAPIView, \
-    ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, \
     RetrieveModelMixin, DestroyModelMixin
+from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet, ViewSet, GenericViewSet
 
+from .models import Author, Bio, Book
 from .serializers import AuthorModelSerializer, BioModelSerializer, BookModelSerializer
 from .serializers import AuthorSerializer, BioSerializer, BookSerializer
-from .models import Author, Bio, Book
 
 
 # client - router/url - view --[       ]--- serializer ---[      ]--- model
@@ -326,7 +322,18 @@ class AuthorDetailGenericViewSet(RetrieveModelMixin, UpdateModelMixin, DestroyMo
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+class AuthorsForStuffCustomPermission(rest_framework.permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_staff)
+
+
 class AuthorModelViewSet(ModelViewSet):
+    # permission_classes = [rest_framework.permissions.IsAuthenticated]
+    # permission_classes = [rest_framework.permissions.IsAuthenticatedOrReadOnly]
+    # permission_classes = [rest_framework.permissions.IsAdminUser]
+    # permission_classes = [rest_framework.permissions.DjangoModelPermissions]
+    permission_classes = [rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly,
+                          AuthorsForStuffCustomPermission]
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     queryset = Author.objects.all()
     serializer_class = AuthorModelSerializer
@@ -342,6 +349,7 @@ class BookModelViewSet(ModelViewSet):
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     queryset = Book.objects.all()
     serializer_class = BookModelSerializer
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -360,6 +368,7 @@ class ActionedAuthorModelViewSet(ModelViewSet):
         author = Author.objects.get(pk=pk)
         return Response({'name': str(author)})
 
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                          params in self.kwargs
@@ -374,6 +383,7 @@ class KwargsParamsAuthorModelViewSet(ModelViewSet):
     def get_queryset(self):
         return Author.objects.filter(first_name__startswith=self.kwargs['name'])
 
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                          params in self.request.query_params
@@ -387,8 +397,10 @@ class QueryParamsAuthorModelViewSet(ModelViewSet):
 
     def get_queryset(self):
         if self.request.query_params.get('name'):
-            return Author.objects.filter(first_name__startswith=self.request.query_params.get('name'))
+            return Author.objects.filter(
+                first_name__startswith=self.request.query_params.get('name'))
         return Author.objects.all()
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -403,6 +415,7 @@ class FilteredAuthorModelViewSet(ModelViewSet):
     # /?first_name=Fedor
     filterset_fields = ['first_name']
 
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                          pagination
@@ -415,11 +428,15 @@ class FilteredAuthorModelViewSet(ModelViewSet):
 #     'PAGE_SIZE': 2,
 # }
 from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
+
+
 class AuthorsPagination(PageNumberPagination):
     page_size = 3
 
+
 class AuthorsOffsetPagination(LimitOffsetPagination):
     default_limit = 2
+
 
 class PaginatedAuthorModelViewSet(ModelViewSet):
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
@@ -427,4 +444,3 @@ class PaginatedAuthorModelViewSet(ModelViewSet):
     serializer_class = AuthorModelSerializer
     # pagination_class = AuthorsPagination
     pagination_class = AuthorsOffsetPagination
-
