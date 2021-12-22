@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, \
     AbstractUser
+from rest_framework.authtoken.models import Token
 
 
 class UserManager(BaseUserManager):
@@ -12,6 +13,7 @@ class UserManager(BaseUserManager):
         user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+        Token.objects.create(user=user)
 
         return user
 
@@ -22,6 +24,7 @@ class UserManager(BaseUserManager):
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
+        Token.objects.create(user=user)
 
         return user
 
@@ -40,3 +43,8 @@ class User(AbstractUser):
 
     def __str__(self):
         return f'{self.username} ({self.first_name} {self.last_name})'
+
+    def update_token(self):
+        Token.objects.get(user=self).delete()
+        Token.objects.create(user=self)
+        print(f'updated token for {self}')

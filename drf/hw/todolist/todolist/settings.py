@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import rest_framework.permissions
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
@@ -36,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
     'users',
     'todo',
@@ -92,6 +95,30 @@ REST_FRAMEWORK = {
     # ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 100,
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # passing session id (for debugging in browser)
+        'rest_framework.authentication.SessionAuthentication',
+
+        # passing login/password in request.args (http authentification)
+        'rest_framework.authentication.BasicAuthentication',
+
+        # passing token in headers
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        # permissions to makeOperations/toViewOnly for authenticated users in current session
+        # 'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+
+        # permissions according to auth_permission
+        'rest_framework.permissions.DjangoModelPermissions',
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+
+        # for making own permissions
+        # 'rest_framework.permissions.BasePermission',
+    ],
 }
 if DEBUG:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
