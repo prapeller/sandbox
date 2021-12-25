@@ -31,5 +31,5 @@ urlpatterns = [
     path('api/', include(router.urls)),
     # for debugmode views only
     path('api-auth/', include('rest_framework.urls')),
-    # path('api-token-auth/', obtain_auth_token),
+    path('api-token-auth/', obtain_auth_token),
 ]
