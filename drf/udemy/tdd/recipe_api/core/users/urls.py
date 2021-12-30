@@ -11,5 +11,6 @@ app_name = 'users'
 
 urlpatterns = [
     path('', views.ListCreateUserView.as_view(), name='list-create'),
-    path('<int:pk>', views.RetrieveUpdateDestroyUserView.as_view(), name='retrieve-update-destroy')
+    path('<int:pk>/', views.RetrieveUpdateDestroyUserView.as_view(), name='retrieve-update-destroy'),
+    path('token/', views.CreateTokenView.as_view(), name='token'),
 ]
