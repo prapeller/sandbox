@@ -9,13 +9,15 @@ class UserAdmin(BaseUserAdmin):
     ordering = ['id']
     list_display = ['email', 'username', 'is_active', 'is_staff', 'is_superuser']
     fieldsets = (
-        (_('Credentials'), {'fields': ('email', 'password')}),
+        (_('Credentials'), {'fields': ('email', 'username')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
     add_fieldsets = (
-        (_('Credentials'), {'classes': ('wide', ),
-                'fields': ('email', 'password', 'password2')}),
+        (_('Credentials'), {
+            'classes': ('wide',),
+            'fields': ('email', 'username', 'password1', 'password2')
+        }),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser')}),
     )
 
