@@ -25,6 +25,9 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    def all_active(self):
+        return self.model.is_active
+
 
 class User(AbstractUser, PermissionsMixin):
     """Custom user model that supports using email instead of username"""

@@ -1,7 +1,7 @@
 #chown -R $(whoami):$(whoami) core/
 #export UID=${UID} && export GID=${GID}
-#docker-compose run app sh -c "django-admin startproject app ."
-#docker-compose run app sh -c "python manage.py test"
+#docker-compose run --rm app sh -c "django-admin startproject app ."
+#docker-compose run --rm app sh -c "python manage.py test"
 
 version: "3"
 
@@ -34,3 +34,5 @@ services:
       - POSTGRES_DB=recipe_app_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=supersecretpassword
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
