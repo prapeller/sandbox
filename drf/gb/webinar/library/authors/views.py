@@ -332,8 +332,8 @@ class AuthorModelViewSet(ModelViewSet):
     # permission_classes = [rest_framework.permissions.IsAuthenticatedOrReadOnly]
     # permission_classes = [rest_framework.permissions.IsAdminUser]
     # permission_classes = [rest_framework.permissions.DjangoModelPermissions]
-    permission_classes = [rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly,
-                          AuthorsForStuffCustomPermission]
+    # permission_classes = [rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly]
+    permission_classes = [AuthorsForStuffCustomPermission]
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     queryset = Author.objects.all()
     serializer_class = AuthorModelSerializer

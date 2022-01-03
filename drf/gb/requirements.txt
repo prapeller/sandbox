@@ -5,3 +5,4 @@ markdown==3.3.4
 django-filter==21.1
 django-cors-headers==3.10.1
 pytz
+mixer==7.2.0
