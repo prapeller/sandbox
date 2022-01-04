@@ -8,3 +8,12 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Ingredient(models.Model):
+    """Ingredient to be used for a recipe"""
+    name = models.CharField(max_length=255)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.name
