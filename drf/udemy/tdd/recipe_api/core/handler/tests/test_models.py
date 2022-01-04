@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from rest_framework.authtoken.models import Token
+
+from recipes import models as recipes_models
+from handler.management.commands.create_sample_user import create_sample_user
 
 
 class ModelTests(TestCase):
@@ -44,3 +46,12 @@ class ModelTests(TestCase):
     #     user = get_user_model().objects.create_anonymous_user()
     #     self.assertTrue(user.is_anonimous)
     #     self.assertIsNotNone(Token.objects.get(user=user))
+
+    def test_tag_str(self):
+        """Test the tag string representation"""
+        tag = recipes_models.Tag.objects.create(
+            user=create_sample_user(),
+            name='Vegan',
+        )
+
+        self.assertEqual(str(tag), tag.name)
