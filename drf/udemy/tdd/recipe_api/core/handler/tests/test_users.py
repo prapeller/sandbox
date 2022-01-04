@@ -9,6 +9,10 @@ LIST_CREATE_USER_URL = reverse('users:list-create')
 TOKEN_URL = reverse('users:token')
 
 
+def get_user_url(pk):
+    return reverse('users:retrieve-update-destroy', kwargs={'pk': pk})
+
+
 def create_user(**kwargs):
     return get_user_model().objects.create_user(**kwargs)
 
@@ -86,4 +90,42 @@ class AnonymousUserApiTests(TestCase):
         self.assertNotIn('token', resp.data)
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_retrieve_user_unauthorized(self):
+        """Test that authenticatino is required for users"""
+        user = create_user(**{'email': 'test@email.com', 'password': '123Testpass'})
+        resp = self.client.get(get_user_url(user.pk))
 
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class AuthUserApiTest(TestCase):
+    """Test API requests that require authentication"""
+
+    def setUp(self) -> None:
+        self.user = create_user(email='test@email.com', password='testpass')
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+        self.user_url = get_user_url(self.user.pk)
+
+    def test_retrieve_profile_success(self):
+        """Test retrieving profile for logged in user"""
+        resp = self.client.get(self.user_url)
+
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data, {'id':self.user.pk, 'email': self.user.email})
+
+    def test_post_to_profile_not_allowed(self):
+        """Test that post to profile is not allowed via me url"""
+        resp = self.client.post(self.user_url, {})
+
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_update_user_profile(self):
+        """Test updating the user profile for authenticated user"""
+        payload = {'email': 'changed@email.com', 'password': 'changedpass'}
+        resp = self.client.patch(self.user_url, payload)
+        self.user.refresh_from_db()
+
+        self.assertEqual(self.user.email, payload['email'])
+        self.assertTrue(self.user.check_password, payload['password'])
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
