@@ -6,14 +6,17 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
 from recipes.models import Tag, Ingredient, Recipe
-from recipes.serializers import TagSerializer, IngredientSerializer, RecipeSerializer, RecipeDetailSerializer
+from recipes.serializers import TagSerializer, IngredientSerializer, RecipeSerializer, \
+    RecipeDetailSerializer
 
 TAGS_URL = reverse('recipes:tag-list')
 INGREDIENTS_URL = reverse('recipes:ingredient-list')
 RECIPES_URL = reverse('recipes:recipe-list')
-def recipes_detail_url(pk):
+
+
+def recipes_detail_url(id):
     """Return recipe detail url"""
-    return reverse('recipes:recipe-detail', kwargs={'pk': pk})
+    return reverse('recipes:recipe-detail', kwargs={'pk': id})
 
 
 def create_sample_user(email='test@email.com', password='testpass'):
@@ -209,7 +212,7 @@ class PrivateRecipeApiTests(TestCase):
         recipe.tags.add(create_sample_tag(user=self.user))
         recipe.ingredients.add(create_sample_ingredient(user=self.user))
 
-        url = recipes_detail_url(recipe.pk)
+        url = recipes_detail_url(recipe.id)
         resp = self.client.get(url)
 
         serializer = RecipeDetailSerializer(recipe)
@@ -236,7 +239,7 @@ class PrivateRecipeApiTests(TestCase):
 
         payload = {
             'title': 'test recipe title 1',
-            'tags': [tag_1.pk, tag_2.pk],
+            'tags': [tag_1.id, tag_2.id],
             'time_minutes': 30.5,
             'price': 2500.00,
         }
@@ -256,7 +259,7 @@ class PrivateRecipeApiTests(TestCase):
 
         payload = {
             'title': 'test recipe title 1',
-            'ingredients': [ingredient_1.pk, ingredient_2.pk],
+            'ingredients': [ingredient_1.id, ingredient_2.id],
             'time_minutes': 30.5,
             'price': 2500.00,
         }
@@ -269,3 +272,36 @@ class PrivateRecipeApiTests(TestCase):
         self.assertIn(ingredient_1, ingredients)
         self.assertIn(ingredient_2, ingredients)
 
+    def test_partial_recipe_update(self):
+        """Test partial update with PATCH"""
+        recipe = create_sample_recipe(user=self.user)
+        recipe.tags.add(create_sample_tag(user=self.user))
+        recipe.tags.add(create_sample_tag(user=self.user))
+        new_tag = create_sample_tag(user=self.user, name='new tag name')
+        new_payload = {'title': 'new title', 'tags': [new_tag.id]}
+        self.client.patch(recipes_detail_url(recipe.id), new_payload)
+        recipe.refresh_from_db()
+
+        self.assertEqual(recipe.title, new_payload['title'])
+        tags = recipe.tags.all()
+        self.assertIn(new_tag, tags)
+        self.assertEqual(len(tags), 1)
+
+    def test_full_recipe_update(self):
+        """Test full update with PUT"""
+
+        recipe = create_sample_recipe(user=self.user)
+        recipe.tags.add(create_sample_tag(user=self.user))
+        recipe.tags.add(create_sample_tag(user=self.user))
+        new_tag = create_sample_tag(user=self.user, name='new tag name')
+        new_payload = {'title': 'new title', 'time_minutes': 5, 'price': 2, 'tags': [new_tag.id]}
+        resp = self.client.put(recipes_detail_url(recipe.id), new_payload)
+        recipe.refresh_from_db()
+
+        self.assertEqual(recipe.title, new_payload['title'])
+        self.assertEqual(recipe.time_minutes, new_payload['time_minutes'])
+        self.assertEqual(recipe.price, new_payload['price'])
+        self.assertEqual(resp.data['tags'], new_payload['tags'])
+        tags = recipe.tags.all()
+        self.assertIn(new_tag, tags)
+        self.assertEqual(len(tags), 1)
