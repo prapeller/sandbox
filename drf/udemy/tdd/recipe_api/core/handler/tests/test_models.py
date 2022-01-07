@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
-from recipes.models import Tag, Ingredient
+from recipes.models import Tag, Ingredient, Recipe
 from handler.management.commands.create_sample_user import create_sample_user
 
 
@@ -64,3 +64,14 @@ class ModelTests(TestCase):
         )
 
         self.assertEqual(str(ing), ing.name)
+
+    def test_recipe_str(self):
+        """Test the recipe string representation"""
+        rec = Recipe.objects.create(
+            user=create_sample_user(),
+            title='Scrambled cucumber',
+            time_minutes=1.5,
+            price=5.99,
+        )
+
+        self.assertEqual(str(rec), rec.title)
