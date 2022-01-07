@@ -5,13 +5,15 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
-from handler.management.commands.create_sample_user import create_sample_user
 from recipes.models import Tag, Ingredient, Recipe
-from recipes.serializers import TagSerializer, IngredientSerializer, RecipeSerializer
+from recipes.serializers import TagSerializer, IngredientSerializer, RecipeSerializer, RecipeDetailSerializer
 
 TAGS_URL = reverse('recipes:tag-list')
 INGREDIENTS_URL = reverse('recipes:ingredient-list')
 RECIPES_URL = reverse('recipes:recipe-list')
+def recipes_detail_url(pk):
+    """Return recipe detail url"""
+    return reverse('recipes:recipe-detail', kwargs={'pk': pk})
 
 
 def create_sample_user(email='test@email.com', password='testpass'):
@@ -19,10 +21,20 @@ def create_sample_user(email='test@email.com', password='testpass'):
     return get_user_model().objects.create_user(email, password)
 
 
+def create_sample_tag(user, name='tag name'):
+    """Create and return a sample tag"""
+    return Tag.objects.create(user=user, name=name)
+
+
+def create_sample_ingredient(user, name='ingredient name'):
+    """Create and return a sample ingredient"""
+    return Ingredient.objects.create(user=user, name=name)
+
+
 def create_sample_recipe(user, **kwargs):
     """Create a sample recipe"""
     defaults = {
-        'title': 'sample recipe',
+        'title': 'test recipe title',
         'time_minutes': 10.5,
         'price': 2.99
     }
@@ -190,3 +202,16 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(len(resp.data), 1)
         self.assertEqual(resp.data, serializer.data)
         self.assertEqual(resp.data[0]['title'], user_rec.title)
+
+    def test_view_recipe_detail(self):
+        """Test viewing a recipe """
+        recipe = create_sample_recipe(user=self.user)
+        recipe.tags.add(create_sample_tag(user=self.user))
+        recipe.ingredients.add(create_sample_ingredient(user=self.user))
+
+        url = recipes_detail_url(recipe.pk)
+        resp = self.client.get(url)
+
+        serializer = RecipeDetailSerializer(recipe)
+        self.assertEqual(resp.data, serializer.data)
+

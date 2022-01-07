@@ -2,7 +2,11 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 from recipes.models import Tag, Ingredient, Recipe
-from handler.management.commands.create_sample_user import create_sample_user
+
+
+def create_sample_user(email='test@email.com', password='testpass'):
+    """Create a sample user"""
+    return get_user_model().objects.create_user(email, password)
 
 
 class ModelTests(TestCase):
@@ -40,12 +44,6 @@ class ModelTests(TestCase):
         )
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
-
-    # def test_create_anonuser(self):
-    #     """test creating a new anonymous user and it has Token"""
-    #     user = get_user_model().objects.create_anonymous_user()
-    #     self.assertTrue(user.is_anonimous)
-    #     self.assertIsNotNone(Token.objects.get(user=user))
 
     def test_tag_str(self):
         """Test the tag string representation"""
