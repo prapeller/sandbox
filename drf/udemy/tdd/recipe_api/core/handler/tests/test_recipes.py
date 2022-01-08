@@ -358,6 +358,71 @@ class PrivateRecipeApiTests(TestCase):
         self.assertIn(serializer_2.data, resp.data)
         self.assertNotIn(serializer_3.data, resp.data)
 
+    def test_retrieve_tags_assigned_to_recipes(self):
+        """Test filtering tags by those assigned to recipes"""
+        recipe_1 = create_sample_recipe(user=self.user, title='sweet eggs with cucumber')
+        recipe_2 = create_sample_recipe(user=self.user, title='saulty bread with jam')
+
+        tag_1 = create_sample_tag(user=self.user, name='sweet')
+        recipe_1.tags.add(tag_1)
+
+        tag_2 = create_sample_tag(user=self.user, name='vegetarian')
+
+        resp = self.client.get(TAGS_URL, {'assigned_only': 1})
+        serializer_1 = TagSerializer(tag_1)
+        serializer_2 = TagSerializer(tag_2)
+
+        self.assertIn(serializer_1.data, resp.data)
+        self.assertNotIn(serializer_2.data, resp.data)
+
+    def test_retrieve_tags_assigned_to_recipes_are_unique(self):
+        """Test filtering tags by assigned returns unique"""
+        recipe_1 = create_sample_recipe(user=self.user, title='sweet eggs with cucumber')
+        recipe_2 = create_sample_recipe(user=self.user, title='saulty bread with jam')
+
+        tag_1 = create_sample_tag(user=self.user, name='sweet')
+        tag_2 = create_sample_tag(user=self.user, name='salty')
+
+        recipe_1.tags.add(tag_1)
+        recipe_2.tags.add(tag_1)
+
+        resp = self.client.get(TAGS_URL, {'assigned_only': 1})
+
+        self.assertEqual(len(resp.data), 1)
+
+    def test_retrieve_ingredients_assigned_to_recipes(self):
+        """Test filtering ingredients by those assigned to recipes"""
+        recipe_1 = create_sample_recipe(user=self.user, title='sweet eggs with cucumber')
+        recipe_2 = create_sample_recipe(user=self.user, title='saulty bread with jam')
+
+        ing_1 = create_sample_ingredient(user=self.user, name='sugar')
+        recipe_1.ingredients.add(ing_1)
+
+        ing_2 = create_sample_ingredient(user=self.user, name='salt')
+
+        resp = self.client.get(INGREDIENTS_URL, {'assigned_only': 1})
+        serializer_1 = TagSerializer(ing_1)
+        serializer_2 = TagSerializer(ing_2)
+
+        self.assertIn(serializer_1.data, resp.data)
+        self.assertNotIn(serializer_2.data, resp.data)
+
+    def test_retrieve_ingredients_assigned_to_recipes_are_unique(self):
+        """Test filtering ingredients by assigned returns unique"""
+        recipe_1 = create_sample_recipe(user=self.user, title='sweet eggs with cucumber')
+        recipe_2 = create_sample_recipe(user=self.user, title='saulty bread with jam')
+
+        ing_1 = create_sample_ingredient(user=self.user, name='sugar')
+        ing_2 = create_sample_ingredient(user=self.user, name='salt')
+
+        recipe_1.ingredients.add(ing_1)
+        recipe_2.ingredients.add(ing_1)
+
+        resp = self.client.get(INGREDIENTS_URL, {'assigned_only': 1})
+
+        self.assertEqual(len(resp.data), 1)
+
+
 
 class MediaTest(TestCase):
 
