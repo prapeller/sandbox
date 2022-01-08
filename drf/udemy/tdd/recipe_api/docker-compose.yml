@@ -1,6 +1,6 @@
 #docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' recipe_api_db_1
 
-#chown -R $(whoami):$(whoami) core/
+#sudo chown -R $(whoami):$(whoami) .
 #export UID=${UID} && export GID=${GID}
 #docker-compose run --rm app sh -c "django-admin startproject app ."
 #docker-compose run --rm app sh -c "python manage.py test"

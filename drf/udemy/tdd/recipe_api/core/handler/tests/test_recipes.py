@@ -1,3 +1,8 @@
+import tempfile
+import os
+
+from PIL import Image
+
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import TestCase
@@ -14,7 +19,12 @@ INGREDIENTS_URL = reverse('recipes:ingredient-list')
 RECIPES_URL = reverse('recipes:recipe-list')
 
 
-def recipes_detail_url(id):
+def get_upload_image_url(recipe_id):
+    """Return URL for recipe image upload"""
+    return reverse('recipes:recipe-upload-image', kwargs={'pk': recipe_id})
+
+
+def get_recipes_detail_url(id):
     """Return recipe detail url"""
     return reverse('recipes:recipe-detail', kwargs={'pk': id})
 
@@ -212,7 +222,7 @@ class PrivateRecipeApiTests(TestCase):
         recipe.tags.add(create_sample_tag(user=self.user))
         recipe.ingredients.add(create_sample_ingredient(user=self.user))
 
-        url = recipes_detail_url(recipe.id)
+        url = get_recipes_detail_url(recipe.id)
         resp = self.client.get(url)
 
         serializer = RecipeDetailSerializer(recipe)
@@ -279,7 +289,7 @@ class PrivateRecipeApiTests(TestCase):
         recipe.tags.add(create_sample_tag(user=self.user))
         new_tag = create_sample_tag(user=self.user, name='new tag name')
         new_payload = {'title': 'new title', 'tags': [new_tag.id]}
-        self.client.patch(recipes_detail_url(recipe.id), new_payload)
+        self.client.patch(get_recipes_detail_url(recipe.id), new_payload)
         recipe.refresh_from_db()
 
         self.assertEqual(recipe.title, new_payload['title'])
@@ -295,7 +305,7 @@ class PrivateRecipeApiTests(TestCase):
         recipe.tags.add(create_sample_tag(user=self.user))
         new_tag = create_sample_tag(user=self.user, name='new tag name')
         new_payload = {'title': 'new title', 'time_minutes': 5, 'price': 2, 'tags': [new_tag.id]}
-        resp = self.client.put(recipes_detail_url(recipe.id), new_payload)
+        resp = self.client.put(get_recipes_detail_url(recipe.id), new_payload)
         recipe.refresh_from_db()
 
         self.assertEqual(recipe.title, new_payload['title'])
@@ -305,3 +315,36 @@ class PrivateRecipeApiTests(TestCase):
         tags = recipe.tags.all()
         self.assertIn(new_tag, tags)
         self.assertEqual(len(tags), 1)
+
+
+class MediaTest(TestCase):
+
+    def setUp(self) -> None:
+        self.client = APIClient()
+        self.user = create_sample_user()
+        self.client.force_authenticate(self.user)
+        self.recipe = create_sample_recipe(user=self.user)
+
+    def tearDown(self) -> None:
+        self.recipe.image.delete()
+
+    def test_uploading_image_to_recipe(self):
+        """Test uploading image to recipe"""
+        upload_image_url = get_upload_image_url(self.recipe.id)
+        with tempfile.NamedTemporaryFile(suffix='.jpg') as named_temp_file:
+            img = Image.new('RGB', (10, 10))
+            img.save(named_temp_file, format='JPEG')
+            named_temp_file.seek(0)
+            resp = self.client.post(upload_image_url, {'image': named_temp_file},
+                                    format='multipart')
+
+        self.recipe.refresh_from_db()
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertIn('image', resp.data)
+        self.assertTrue(os.path.exists(self.recipe.image.path))
+
+    def test_upload_image_bad_request(self):
+        upload_url = get_upload_image_url(self.recipe.id)
+        resp = self.client.post(upload_url, {'image': 'notimage'}, format='multipart')
+
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)

@@ -19,5 +19,5 @@ RUN mkdir -p /vol/web/media
 RUN mkdir -p /vol/web/static
 RUN adduser -D app_daemon
 RUN chown -R app_daemon /vol/
-RUN chown -R 755 /vol/web/
+#RUN chown -R 755 /vol/web
 USER app_daemon
