@@ -16,9 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from recipes.urls import router as recipes_router
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include('users.urls')),
     path('api/recipes/', include('recipes.urls')),
-]
+
+# makes media url available in dev server so can test uploading images without setting separate web server for media files
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -119,7 +119,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+
+STATIC_URL = 'static/'              # 127.0.0.1:8000/static -- for accessing through web server
+STATIC_ROOT = '/vol/web/static'     #   -- where to store static files in the host when the project is build / collect_static
+
+MEDIA_URL = '/media/'               # 127.0.0.1:8000/media      -- for accessing through web server
+MEDIA_ROOT = '/vol/web/media'       #   -- where to store media files in the host
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
