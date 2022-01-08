@@ -316,6 +316,48 @@ class PrivateRecipeApiTests(TestCase):
         self.assertIn(new_tag, tags)
         self.assertEqual(len(tags), 1)
 
+    def test_filter_recipe_by_tags(self):
+        """Test returning recipes with specific tags"""
+        recipe_1 = create_sample_recipe(user=self.user, title='sweet eggs with cucumber')
+        recipe_2 = create_sample_recipe(user=self.user, title='saulty bread with jam')
+        recipe_3 = create_sample_recipe(user=self.user, title='fish and chips')
+
+        tag_1 = create_sample_tag(user=self.user, name='sweet')
+        recipe_1.tags.add(tag_1)
+
+        tag_2 = create_sample_tag(user=self.user, name='vegetarian')
+        recipe_2.tags.add(tag_2)
+
+        resp = self.client.get(RECIPES_URL, {'tags': f'{tag_1.id},{tag_2.id}'})
+        serializer_1 = RecipeSerializer(recipe_1)
+        serializer_2 = RecipeSerializer(recipe_2)
+        serializer_3 = RecipeSerializer(recipe_3)
+
+        self.assertIn(serializer_1.data, resp.data)
+        self.assertIn(serializer_2.data, resp.data)
+        self.assertNotIn(serializer_3.data, resp.data)
+
+    def test_filter_recipes_by_ingredient(self):
+        """Test return recipes with specific ingredients"""
+        recipe_1 = create_sample_recipe(user=self.user, title='sweet eggs with cucumber')
+        recipe_2 = create_sample_recipe(user=self.user, title='saulty bread with jam')
+        recipe_3 = create_sample_recipe(user=self.user, title='fish and chips')
+
+        ing_1 = create_sample_ingredient(user=self.user, name='sugar')
+        recipe_1.ingredients.add(ing_1)
+
+        ing_2 = create_sample_ingredient(user=self.user, name='salt')
+        recipe_2.ingredients.add(ing_2)
+
+        serializer_1 = RecipeSerializer(recipe_1)
+        serializer_2 = RecipeSerializer(recipe_2)
+        serializer_3 = RecipeSerializer(recipe_3)
+
+        resp = self.client.get(RECIPES_URL, {'ingredients': f'{ing_1.id},{ing_2.id}'})
+        self.assertIn(serializer_1.data, resp.data)
+        self.assertIn(serializer_2.data, resp.data)
+        self.assertNotIn(serializer_3.data, resp.data)
+
 
 class MediaTest(TestCase):
 

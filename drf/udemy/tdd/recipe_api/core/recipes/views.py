@@ -44,9 +44,25 @@ class ListRecipeViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
+    def _params_to_ints(self, qs):
+        """Convert string-IDs list to a integer-IDs list"""
+        return [int(str_id) for str_id in qs.split(',')]
+
     def get_queryset(self):
         """Return objects for the current authenticated user"""
-        return self.queryset.filter(user=self.request.user).order_by('-id')
+        tags = self.request.query_params.get('tags')
+        ingredients = self.request.query_params.get('ingredients')
+
+        queryset = self.queryset
+
+        if tags:
+            tag_ids = self._params_to_ints(tags)
+            queryset = queryset.filter(tags__id__in=tag_ids)
+        if ingredients:
+            ing_ids = self._params_to_ints(ingredients)
+            queryset = queryset.filter(ingredients__id__in=ing_ids)
+
+        return queryset.filter(user=self.request.user).order_by('-id')
 
     def get_serializer_class(self):
         """Return appropriate serializer class for corresponding action"""
