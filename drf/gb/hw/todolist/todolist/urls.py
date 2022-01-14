@@ -14,10 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from rest_framework.authtoken.views import obtain_auth_token
+from django.urls import path, include, re_path
 
+from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework.permissions import AllowAny
+from rest_framework.routers import DefaultRouter
+
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 from todo.views import ProjectModelViewSet, TodoModelViewSet
 from users.views import UserModelViewSet
 
@@ -26,10 +30,23 @@ router.register('users', UserModelViewSet)
 router.register('projects', ProjectModelViewSet)
 router.register('todos', TodoModelViewSet)
 
+schema_view = get_schema_view(
+    openapi.Info(title='Todo List',
+                 default_version='v1',
+                 description='Todo list used by Users in their Projects',
+                 contact=openapi.Contact(email='test@test.com'),
+                 license=openapi.License(name='MIT')
+                 ),
+    public=True,
+    permission_classes=(AllowAny,),
+)
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
-    # for debugmode views only
-    path('api-auth/', include('rest_framework.urls')),
-    path('api-token-auth/', obtain_auth_token),
+    path(r'admin/', admin.site.urls),
+    re_path(r'^api/(?P<version>.\d)/', include(router.urls)),
+    path(r'api-auth/', include('rest_framework.urls')),
+    path(r'api-token-auth/', obtain_auth_token),
+
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0)),
+    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
 ]

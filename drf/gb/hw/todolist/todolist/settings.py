@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'drf_yasg',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
@@ -120,7 +121,24 @@ REST_FRAMEWORK = {
         # for making own permissions
         # 'rest_framework.permissions.BasePermission',
     ],
+
+    'DEFAULT_VERSIONING_CLASS':
+    # http://127.0.0.1:8000/api/v2/users/
+    'rest_framework.versioning.URLPathVersioning',
+
+    # path('api/v1/users/', include('userapp.urls', namespace='v1')),
+    # 'rest_framework.versioning.NamespaceVersioning',
+
+    # http://v1.example.com/bookings/
+    # 'rest_framework.versioning.HostNameVersioning',
+
+    # http://127.0.0.1:8000/api/users/?version=v1/
+    # 'rest_framework.versioning.QueryParameterVersioning',
+
+    # requests.get('http://127.0.0.1:8000/api/users/', headers={'Accept': 'application/json; version=v2'})
+    # 'rest_framework.versioning.AcceptHeaderVersioning',
 }
+
 if DEBUG:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
         'rest_framework.renderers.BrowsableAPIRenderer')
