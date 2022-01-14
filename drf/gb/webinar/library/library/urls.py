@@ -13,10 +13,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-import rest_framework.authtoken.views
 from django.contrib import admin
 from django.urls import path, include
+
+import rest_framework.authtoken.views
 from rest_framework.routers import DefaultRouter, SimpleRouter, BaseRouter
+from rest_framework.permissions import AllowAny
+
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
 from authors.views import authors_list_view, authors_detail_view, bios_view, books_view
 from authors.views import authors_list_api_view, authors_detail_api_view
 from authors.views import AuthorListGenericViewSet, AuthorDetailGenericViewSet
@@ -30,6 +36,16 @@ from authors.views import QueryParamsAuthorModelViewSet
 from authors.views import FilteredAuthorModelViewSet
 from authors.views import PaginatedAuthorModelViewSet
 
+schema_view = get_schema_view(
+    openapi.Info(title='Library',
+                 default_version='v1',
+                 description='',
+                 contact=openapi.Contact(email='test@test.com'),
+                 license=openapi.License(name='MIT')
+                 ),
+    public=True,
+    permission_classes=(AllowAny,),
+)
 
 router = DefaultRouter()
 # router = SimpleRouter()
@@ -43,6 +59,7 @@ router.register('modelviewset_books', BookModelViewSet)
 # router.register('params_authors', QueryParamsAuthorModelViewSet)
 # router.register('filtered_authors', FilteredAuthorModelViewSet)
 # router.register('paginated_authors', PaginatedAuthorModelViewSet)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -67,12 +84,13 @@ urlpatterns = [
 
     path('cbv/genviewset_authors/', AuthorListGenericViewSet.as_view({'get': 'list', 'post': 'create'})),
     path('cbv/genviewset_authors/<int:pk>/', AuthorDetailGenericViewSet.as_view({'get': 'retrieve',
-                                                                 'put': 'update',
-                                                                 'patch': 'partial_update',
-                                                                 'delete': 'destroy'})),
+                                                                                 'put': 'update',
+                                                                                 'patch': 'partial_update',
+                                                                                 'delete': 'destroy'})),
 
     path('params_authors/<str:name>/', KwargsParamsAuthorModelViewSet.as_view({'get': 'list'})),
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
     path('api-token-auth/', rest_framework.authtoken.views.obtain_auth_token),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0)),
 ]

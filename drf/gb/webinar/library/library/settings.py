@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'django_filters',
+    'drf_yasg',
     'authors',
 
 ]
@@ -100,9 +101,14 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-    ]
-
-
+    ],
+    # 'DEFAULT_VERSIONING_CLASS': [
+        # 'rest_framework.versioning.URLPathVersioning',
+        # 'rest_framework.versioning.NamespaceVersioning',
+        # 'rest_framework.versioning.HostNameVersioning',
+        # 'rest_framework.versioning.QueryParameterVersioning',
+        # 'rest_framework.versioning.AcceptHeaderVersioning',
+    # ],
 }
 if DEBUG:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
