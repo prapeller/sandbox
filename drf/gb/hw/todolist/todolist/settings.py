@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'drf_yasg',
     'rest_framework',
+    'graphene_django',
     'rest_framework.authtoken',
     'corsheaders',
     'users',
@@ -194,3 +195,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
+
+GRAPHENE = {
+    'SCHEMA': 'todolist.schema.schema'
+}
