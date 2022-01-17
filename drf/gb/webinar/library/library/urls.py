@@ -22,6 +22,7 @@ from rest_framework.permissions import AllowAny
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from graphene_django.views import GraphQLView
 
 from authors.views import authors_list_view, authors_detail_view, bios_view, books_view
 from authors.views import authors_list_api_view, authors_detail_api_view
@@ -93,4 +94,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api-token-auth/', rest_framework.authtoken.views.obtain_auth_token),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0)),
+    path('graphql/', GraphQLView.as_view(graphiql=True)),
 ]
