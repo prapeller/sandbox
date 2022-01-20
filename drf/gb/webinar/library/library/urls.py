@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 import rest_framework.authtoken.views
+from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter, SimpleRouter, BaseRouter
 from rest_framework.permissions import AllowAny
 
@@ -95,4 +96,5 @@ urlpatterns = [
     path('api-token-auth/', rest_framework.authtoken.views.obtain_auth_token),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0)),
     path('graphql/', GraphQLView.as_view(graphiql=True)),
+    path('', TemplateView.as_view(template_name='index.html')),
 ]

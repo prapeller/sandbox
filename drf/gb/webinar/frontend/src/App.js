@@ -9,6 +9,7 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import axios from "axios";
 import LoginForm from "./components/LoginForm";
+import BookForm from "./components/BookForm";
 
 
 export class App extends React.Component {
@@ -78,6 +79,32 @@ export class App extends React.Component {
 
     }
 
+    deleteBook(id) {
+        let headers = this.get_headers()
+        axios
+            .delete(`http://127.0.0.1:8000/api/modelviewset_books/${id}`, {headers})
+            .then(response => {
+                const authors = response.data
+                this.setState({
+                    'books': this.state.books.filter((book) => book.id != id)
+                })
+            }).catch(error => {
+            console.log(error)
+        })
+    }
+
+    createBook(name, authors) {
+        let headers = this.get_headers()
+        axios
+            .post('http://127.0.0.1:8000/api/modelviewset_books/', {'name': name, 'authors': authors}, {headers})
+            .then(response => {
+                this.get_data()
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
     render() {
         return (
             <div>
@@ -87,6 +114,7 @@ export class App extends React.Component {
                     <ul>
                         <li><Link to="/authors">Authors</Link></li>
                         <li><Link to="/books">Books</Link></li>
+                        <li><Link to="/books/create">Create Book</Link></li>
                         <li>{this.is_auth() ? <button onClick={() => this.logout()}>Logout</button> : <Link to="/login">Login</Link>}</li>
                     </ul>
 
@@ -94,7 +122,8 @@ export class App extends React.Component {
                         <Route exact path='/' element={<h1>hello</h1>}/>
                         <Route exact path='/authorss' element={<Navigate to="/"/>}/>
                         <Route exact path='/authors' element={<AuthorList authors={this.state.authors}/>}/>
-                        <Route exact path='/books' element={<BookList books={this.state.books}/>}/>
+                        <Route exact path='/books' element={<BookList books={this.state.books} deleteBook={(id) => this.deleteBook(id)}/>}/>
+                        <Route exact path='/books/create' element={<BookForm authors={this.state.authors} createBook={(name, authors) => this.createBook(name, authors)}/>}/>}/>
                         <Route exact path='/authorbooks/:id' element={<AuthorBooks books={this.state.books}/>}/>
                         <Route exact path='/login' element={<LoginForm form_get_token={(login, password) => this.get_token(login, password)}/>}/>
                         <Route path='*' element={<main><p>nothing here, 404, page not found, get out of here</p></main>}/>
