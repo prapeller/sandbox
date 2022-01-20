@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
+from django.views.generic import TemplateView
 
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.permissions import AllowAny
@@ -52,4 +53,6 @@ urlpatterns = [
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
 
     path(r'graphql/', GraphQLView.as_view(graphiql=True)),
+
+    path('', TemplateView.as_view(template_name='index.html')),
 ]

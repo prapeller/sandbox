@@ -69,7 +69,7 @@ CORS_ALLOWED_ORIGINS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / '..' / 'frontend/build/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -187,6 +187,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+
+STATICFILES_DIRS = [BASE_DIR / '../frontend/build/static']
 
 STATIC_URL = '/static/'
 

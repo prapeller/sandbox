@@ -16,4 +16,4 @@ class Todo(models.Model):
     is_active = models.BooleanField(default=True)
 
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, null=True, on_delete=models.CASCADE)
