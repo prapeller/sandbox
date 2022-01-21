@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:14-alpine
+    privileged: true
+    restart: always
+    ports:
+      - "54325:5432"
+    environment:
+      POSTGRES_USER: postgres_user
+      POSTGRES_DB: todolist_db
+      POSTGRES_PASSWORD: superpassword
+
+  app:
+    build:
+      context: .
+    privileged: true
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      DJANGO_SETTINGS_MODULE: 'todolist.settings.prod_postgres'
+    command: >
+      sh -c "python manage.py makemigrations &&
+            python manage.py migrate &&
+            gunicorn todolist.wsgi -b 0.0.0.0:8080"
+
+  nginx:
+    build: ./nginx
+    privileged: true
+    ports:
+      - "8000:80"
+    depends_on:
+      - app
+
+  frontend:
+    build: ./frontend
+    privileged: true
+    ports:
+      - "80:80"
+    depends_on:
+      - app
