@@ -33,6 +33,12 @@ f.write('декоратор\n')
 f.close()
 
 with open('test_file.txt', 'rb') as f:
-    for bytes_seq in f:
-        encoding = chardet.detect(bytes_seq).get('encoding')
-        print(bytes_seq.decode(encoding=encoding), end='')
+    text = f.read()
+    encoding = chardet.detect(text).get('encoding')
+    decoded_text = text.decode(encoding=encoding)
+
+with open('test_file.txt', 'w', encoding='utf-8') as f:
+    f.write(decoded_text)
+
+with open('test_file.txt', 'r', encoding='utf-8') as f:
+    print(f.read())

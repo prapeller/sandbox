@@ -1,0 +1,8 @@
+first_key:
+- value_0
+- value_1
+- value_2
+second_key: 3
+third_key:
+  spam: 1€
+  eggs: 2€

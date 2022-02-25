@@ -23,7 +23,8 @@
 
 
 def unicodize(str_to_unicode: str) -> str:
-    return str(str_to_unicode.encode('unicode_escape')).replace('b', '').replace('\\\\', '\\')
+    # return str(str_to_unicode.encode('unicode_escape')).replace('b', '').replace('\\\\', '\\')
+    return str_to_unicode.encode('unicode_escape').decode('utf-8')
 
 
 words = ['разработка', 'сокет', 'декоратор']
