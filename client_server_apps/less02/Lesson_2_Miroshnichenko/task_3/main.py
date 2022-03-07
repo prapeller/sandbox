@@ -22,7 +22,7 @@ ASCII(например, €);
 import yaml
 
 data = {
-    'first_key': ['value_0', 'value_1', 'value_2'],
+    'first_key': ['значение_1', 'значение_2', 'значение_3'],
     'second_key': 3,
     'third_key': {
         'spam': '1€',

@@ -54,9 +54,10 @@ def write_order_to_json(item, quantity, price, buyer, date, file_name='orders.js
             'buyer': buyer,
             'date': date,
         })
-        json.dump(data_dict, f, indent=4)
+        json.dump(data_dict, f, indent=4, ensure_ascii=False)
 
 
+write_order_to_json('предмет', 100, 200.20, 'покупатель', str(datetime.datetime.now()))
 write_order_to_json('item1', 100, 200.20, 'buyer1', str(datetime.datetime.now()))
 write_order_to_json('item2', 100, 200.20, 'buyer2', str(datetime.datetime.now()))
 write_order_to_json('item3', 100, 200.20, 'buyer3', str(datetime.datetime.now()))
