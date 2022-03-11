@@ -15,9 +15,8 @@ while True:
     elif ACTION == 's':
         PROCESS.append(subprocess.Popen(args=('gnome-terminal', '--', 'python3', 'time_server.py'), stdout=subprocess.PIPE, preexec_fn=os.setsid))
         for i in range(5):
-            PROCESS.append(subprocess.Popen(('gnome-terminal', '--', 'python3', 'time_client.py'), preexec_fn=os.setsid))
+            PROCESS.append(subprocess.Popen(('gnome-terminal', '--', 'python3', 'time_client.py'), preexec_fn=os.setsid, stdout=subprocess.PIPE))
     elif ACTION == 'x':
         while PROCESS:
             VICTIM = PROCESS.pop()
-            pid = os.getpgid(VICTIM.pid)
-            os.kill(pid, signal.SIGKILL)
+            os.kill(os.getpgid(VICTIM.pid), signal.SIGKILL)

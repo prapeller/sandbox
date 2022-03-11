@@ -1,8 +1,7 @@
 import socket
 from socket import AF_INET, SOCK_STREAM
-import json
 
-from base import MessengerMixin, ValidatorMixin
+from mixin import MessengerMixin, ValidatorMixin
 from settings import SERVER_ADDRESS, SERVER_PORT, CONNECTIONS_NUMBER_MAX
 
 
@@ -15,14 +14,13 @@ class Server(MessengerMixin, ValidatorMixin, socket.socket):
 
     def run(self):
         while True:
-            client, client_address = self.accept()
-            try:
-                message = self.receive_message_from(client)
-                print(f'{self} received message from {client}:\n{message}')
-                # {'action': 'presence', 'time': 1573760672.167031, 'user': {'account_name': 'Guest'}}
-                response = self.get_response_code(message)
-                self.send_message_to(client, response)
-                client.close()
-            except (ValueError, json.JSONDecodeError):
-                print('It was received invalid message from client.')
-                client.close()
+            client_sock, client_address = self.accept()
+            message = self.receive_message(client_sock)
+            response = self.get_response(message)
+            self.send_message(client_sock, response)
+            client_sock.close()
+
+
+if __name__ == '__main__':
+    server = Server()
+    server.run()
