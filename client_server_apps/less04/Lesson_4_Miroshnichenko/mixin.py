@@ -51,11 +51,11 @@ class MessengerMixin:
 
     @staticmethod
     def get_response(message: dict) -> dict:
+
         if all((
                 (ACTION in message),
-                (message[ACTION] == PRESENCE),
-                (USER in message),
-                (message[USER][ACCOUNT_NAME] == 'Guest'),
+                (message.get(ACTION) == PRESENCE),
+                (USER in message and message.get(USER).get(ACCOUNT_NAME) == 'Guest'),
                 (TIME in message),
         )):
             return {RESPONSE: 200}
@@ -69,5 +69,6 @@ class MessengerMixin:
         if RESPONSE in message:
             if message[RESPONSE] == 200:
                 return '200 : OK'
-            return f'400 : {message[ERROR]}'
+            elif message[RESPONSE] == 400:
+                return f'400 : {message[ERROR]}'
         raise ValueError
