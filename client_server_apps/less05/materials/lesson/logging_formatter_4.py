@@ -14,11 +14,11 @@ APP_LOG.setLevel(logging.INFO)
 
 # Создать обработчик который выводит сообщения с уровнем CRITICAL в поток stderr
 STREAM_HANDLER = logging.StreamHandler(sys.stderr)
-STREAM_HANDLER.setLevel(logging.INFO)
+STREAM_HANDLER.setLevel(logging.CRITICAL)
 
 # Создать обработчик который выводит сообщения в файл
 FILE_HANDLER = logging.FileHandler('app_4.log')
-FILE_HANDLER.setLevel(logging.INFO)
+FILE_HANDLER.setLevel(logging.DEBUG)
 
 # Создать объект Formatter
 # Определить формат сообщений

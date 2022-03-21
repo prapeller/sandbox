@@ -7,23 +7,32 @@ import logging
 
 # Создать логгер - регистратор верхнего уроовня
 # с именем app.main
+import sys
+
+# create logger
 LOG = logging.getLogger('app.main')
 
-# Создать обработчик
-FILE_HANDLER = logging.FileHandler("app.log", encoding='utf-8')
-# выводит сообщения с уровнем DEBUG
-FILE_HANDLER.setLevel(logging.DEBUG)
+# create handler
+SH = logging.StreamHandler(sys.stderr)
+FH = logging.FileHandler('app.log', encoding='utf-8')
 
-# Создать объект Formatter
-# Определить формат сообщений
-FORMATTER = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s ")
+# set level to handler
+SH.setLevel(logging.CRITICAL) # there will be only CRITICAL TO Stream
+FH.setLevel(logging.INFO) #  and INFO+CRITICAL to File
 
-# подключить объект Formatter к обработчику
-FILE_HANDLER.setFormatter(FORMATTER)
+# create format
+FORMATTER = logging.Formatter("%(asctime)-10s - %(levelname)-30s - %(message)s ")
 
-# Добавить обработчик к регистратору
-LOG.addHandler(FILE_HANDLER)
-LOG.setLevel(logging.DEBUG)
+# set format to handler
+FH.setFormatter(FORMATTER)
+SH.setFormatter(FORMATTER)
 
-# Передать сообщение обработчику
-LOG.info('Информационное сообщение')
+# add handler to logger
+LOG.addHandler(FH)
+LOG.addHandler(SH)
+LOG.setLevel(logging.DEBUG) # < -- anyway there will be only CRITICAL TO Stream and INFO+CRITICAL to File
+
+# pass message to logger
+LOG.debug('some debug information')
+LOG.info('important information')
+LOG.critical('some critical error')

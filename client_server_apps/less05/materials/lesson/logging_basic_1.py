@@ -14,8 +14,10 @@ logging.basicConfig(
     # %(message)s - текст сообщения
     format="%(levelname)s %(asctime)s %(message)s",
     # будут обрабатывать сообщения с уровнем важности, равным указанному или выше
-    level=logging.INFO
-    #level=logging.DEBUG,
+    # level=logging.CRITICAL,
+    level=logging.WARNING,
+    # level=logging.INFO,
+    # level=logging.DEBUG,
 )
 
 # Для использования логгера его нужно получить/создать функцией getLogger

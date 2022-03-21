@@ -1,17 +1,17 @@
 """Программа-клиент"""
 
-import sys
-import json
-import socket
-import time
 import argparse
+import json
 import logging
-import logs.config_client_log
-from errors import ReqFieldMissingError
+import socket
+import sys
+import time
+
+from common.utils import get_message, send_message
 from common.variables import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, \
     RESPONSE, DEFAULT_PORT, ERROR, DEFAULT_IP_ADDRESS
-from common.utils import get_message, send_message
-
+from errors import ReqFieldMissingError
+import logs.config_client_log
 
 # Инициализация клиентского логера
 CLIENT_LOGGER = logging.getLogger('client')

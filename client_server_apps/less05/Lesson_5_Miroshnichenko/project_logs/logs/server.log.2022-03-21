@@ -1,0 +1,5 @@
+2022-03-21 23:31:20,661 | DEBUG    | config_log_server.py | Debug message
+2022-03-21 23:31:20,661 | INFO     | config_log_server.py | Info message
+2022-03-21 23:31:20,661 | WARNING  | config_log_server.py | Warning message
+2022-03-21 23:31:20,661 | ERROR    | config_log_server.py | Error message
+2022-03-21 23:31:20,661 | CRITICAL | config_log_server.py | Critical message

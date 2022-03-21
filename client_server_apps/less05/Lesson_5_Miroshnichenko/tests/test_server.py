@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from server import Server
-from settings import TIME, ACTION, PRESENCE, USER, ACCOUNT_NAME, RESPONSE, ERROR
+from ..server import Server
+from ..settings import TIME, ACTION, PRESENCE, USER, ACCOUNT_NAME, RESPONSE, ERROR
 
 
 # @staticmethod

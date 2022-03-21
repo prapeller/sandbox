@@ -18,7 +18,7 @@ CRIT_HAND = logging.StreamHandler(sys.stderr)
 
 # Создать объект Formatter
 # Определить формат сообщений
-FORMATTER = logging.Formatter("%(levelname)-10s %(asctime)s %(message)s")
+FORMATTER = logging.Formatter("%(levelname)-10s %(asctime)-30s %(message)s")
 
 # подключить объект Formatter к обработчику
 CRIT_HAND.setFormatter(FORMATTER)
