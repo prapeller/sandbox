@@ -1,5 +1,4 @@
 import json
-import logging
 import socket
 import time
 
@@ -11,12 +10,12 @@ class ValidatorMixin:
 
     def validate_port(self, port: int):
         if port < 1024 or port > 65535:
-            log_info = f'{self} cant validate port {port}, it must be within [1024:65535]'
-            logging.getLogger(self.__class__.__name__).critical(log_info)
+            self.logger.critical(f'{self} cant validate port {port}, it must be within [1024:65535]')
             raise ValueError()
 
 
 class MessengerMixin:
+
     def create_presence_message(self, account_name='Guest') -> dict:
         """
         Returns dict with presence_message for current client, for not registered account 'account_name' is 'Guest':
@@ -30,7 +29,7 @@ class MessengerMixin:
             }
         }
 
-        logging.getLogger(self.__class__.__name__).debug(f'{self} creating presence message {message}')
+        self.logger.debug(f'{self} creating presence message {message}')
         return message
 
     def receive_message(self, transport: socket.socket) -> dict:
@@ -38,11 +37,11 @@ class MessengerMixin:
             message_bytes = transport.recv(BUFFER_SIZE)
             message_json = message_bytes.decode(ENCODING)
             message = json.loads(message_json)
-            logging.getLogger(self.__class__.__name__).debug(f'{transport} receiving message: {message}')
+            self.logger.debug(f'{transport} receiving message: {message}')
 
             return message
         except Exception as e:
-            logging.getLogger(self.__class__.__name__).debug(f'critical in {self}: {e}')
+            self.logger.debug(f'critical in {self}: {e}')
             transport.close()
 
     def send_message(self, transport: socket.socket, message: dict) -> None:
@@ -50,9 +49,9 @@ class MessengerMixin:
             message_json = json.dumps(message)
             message_bytes = message_json.encode(ENCODING)
             transport.send(message_bytes)
-            logging.getLogger(self.__class__.__name__).debug(f'{transport} sending as encoded message: {message}')
+            self.logger.debug(f'{transport} sending as encoded message: {message}')
         except Exception as e:
-            logging.getLogger(self.__class__.__name__).debug(f'critical in {self}: {e}')
+            self.logger.debug(f'critical in {self}: {e}')
             transport.close()
 
     def get_response(self, message: dict) -> dict:
@@ -68,7 +67,7 @@ class MessengerMixin:
                 RESPONSE: 400,
                 ERROR: 'Bad Request'
             }
-        logging.getLogger(self.__class__.__name__).debug(f'{self} got response: {response} from {message}')
+        self.logger.debug(f'{self} got response: {response} from {message}')
         return response
 
     def get_response_code(self, message: dict) -> str:
@@ -78,8 +77,8 @@ class MessengerMixin:
             elif message[RESPONSE] == 400:
                 response_code = f'400 : {message[ERROR]}'
 
-            logging.getLogger(self.__class__.__name__).info(f'{self} got response_code: "{response_code}" from {message}')
+            self.logger.info(f'{self} got response_code: "{response_code}" from {message}')
             return response_code
         else:
-            logging.getLogger(self.__class__.__name__).critical(f'critical with {self}, cant get response_code from {message}')
+            self.logger.critical(f'critical with {self}, cant get response_code from {message}')
             raise ValueError

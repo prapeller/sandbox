@@ -6,20 +6,15 @@ from mixin import MessengerMixin, ValidatorMixin
 from settings import SERVER_ADDRESS, SERVER_PORT, CONNECTIONS_NUMBER_MAX
 from project_logs.config import config_log_server
 
-logger = logging.getLogger('Server')
-
 
 class Server(MessengerMixin, ValidatorMixin, socket.socket):
     def __init__(self, addr=SERVER_ADDRESS, port=SERVER_PORT):
+        self.logger = logging.getLogger('Server')
         self.validate_port(port=port)
         super().__init__(family=AF_INET, type=SOCK_STREAM)
         self.bind((addr, port))
-        logger.debug(f'{self} initialized, binded to {addr, port}')
+        self.logger.debug(f'{self} was initialized, bound to {addr, port}')
         self.listen(CONNECTIONS_NUMBER_MAX)
-
-    def close(self):
-        logger.debug(f'{self} closing...')
-        super().close()
 
     def run(self):
         while True:
@@ -28,7 +23,6 @@ class Server(MessengerMixin, ValidatorMixin, socket.socket):
             response = self.get_response(message)
             self.send_message(client_sock, response)
             client_sock.close()
-            # self.close()
 
 
 if __name__ == '__main__':
