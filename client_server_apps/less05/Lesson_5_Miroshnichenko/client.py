@@ -7,10 +7,10 @@ from project_logs.config import config_log_client
 
 class Client(MessengerMixin, ValidatorMixin, socket):
     def __init__(self, port=SERVER_PORT):
-        self.logger = logging.getLogger('Client')
+        self.logger = logging.getLogger("Client")
         self.validate_port(port)
         super().__init__(family=AF_INET, type=SOCK_STREAM)
-        self.logger.debug(f'{self} was initialized')
+        self.logger.debug(f"{self} was initialized")
 
     def run(self):
         self.connect((SERVER_ADDRESS, SERVER_PORT))
@@ -21,6 +21,6 @@ class Client(MessengerMixin, ValidatorMixin, socket):
         print(response_code)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     client = Client()
     client.run()

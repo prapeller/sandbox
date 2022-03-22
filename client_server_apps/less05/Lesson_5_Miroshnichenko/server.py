@@ -9,11 +9,10 @@ from project_logs.config import config_log_server
 
 class Server(MessengerMixin, ValidatorMixin, socket.socket):
     def __init__(self, addr=SERVER_ADDRESS, port=SERVER_PORT):
-        self.logger = logging.getLogger('Server')
-        self.validate_port(port=port)
         super().__init__(family=AF_INET, type=SOCK_STREAM)
+        self.validate_port(port=port)
         self.bind((addr, port))
-        self.logger.debug(f'{self} was initialized, bound to {addr, port}')
+        self.logger.debug(f"{self} was initialized and bound to {addr}:{port}")
         self.listen(CONNECTIONS_NUMBER_MAX)
 
     def run(self):
@@ -25,6 +24,6 @@ class Server(MessengerMixin, ValidatorMixin, socket.socket):
             client_sock.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     server = Server()
     server.run()

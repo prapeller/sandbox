@@ -16,7 +16,7 @@ class TestClient(TestCase):
         self.client.close()
 
     def test_validate_port(self):
-        """Test Client with wrong port doesn't pass validation while __init__ ('port must be within [1024:65535]')"""
+        """Test Client with wrong port doesn't pass validation while __init__ ("port must be within [1024:65535]")"""
         with self.assertRaises(ValueError):
             Client(port=1023)
         with self.assertRaises(ValueError):
@@ -26,23 +26,23 @@ class TestClient(TestCase):
         """Test client creating correct presence message"""
         message = self.client.create_presence_message()
         message[TIME] = None
-        self.assertEqual(message, {ACTION: PRESENCE, TIME: None, USER: {ACCOUNT_NAME: 'Guest'}})
+        self.assertEqual(message, {ACTION: PRESENCE, TIME: None, USER: {ACCOUNT_NAME: "Guest"}})
 
     def test_get_response_code_200(self):
         """Test client getting response code "200 : OK" from message"""
         message = {RESPONSE: 200}
         response_code = self.client.get_response_code(message)
-        self.assertEqual(response_code, '200 : OK')
+        self.assertEqual(response_code, "200 : OK")
 
     def test_get_response_code_400(self):
         """Test client getting response code "400 : Bad Request" from message"""
-        message = {RESPONSE: 400, ERROR: 'Bad Request'}
+        message = {RESPONSE: 400, ERROR: "Bad Request"}
         response_code = self.client.get_response_code(message)
-        self.assertEqual(response_code, '400 : Bad Request')
+        self.assertEqual(response_code, "400 : Bad Request")
 
     def test_raises_error_without_response(self):
         """Test client raises ValueError if not RESPONSE in message"""
-        message = {ERROR: 'Bad Request'}
+        message = {ERROR: "Bad Request"}
         self.assertRaises(ValueError, self.client.get_response_code, message)
 
     # def test_client_send_message(self):
