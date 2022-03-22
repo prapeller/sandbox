@@ -7,24 +7,32 @@ from settings import BUFFER_SIZE, ENCODING, ACTION, ACCOUNT_NAME, TIME, PRESENCE
 from project_logs.config import config_log_client, config_log_server
 
 
-def bind_logger(cls, instance):
-    """Binding server/client logger to mixin in accordance with child class name"""
-    if instance.__class__.__name__ == "Server":
-        instance.logger = logging.getLogger("Server")
-    elif instance.__class__.__name__ == "Client":
-        instance.logger = logging.getLogger("Client")
-    else:
-        raise Exception(f"{cls.__name__} should be inherited from classes with classname \"Server\" or \"Client\"")
+def bind_logger(cls):
+    """Decorator for binding server/client logger to mixin
+    in accordance with name of class that using mixin"""
+
+    def decorate(__init__):
+        def new_init(self, *args, **kwargs):
+            self.logger = None
+            if self.__class__.__name__ == "Server":
+                self.logger = logging.getLogger("Server")
+            elif self.__class__.__name__ == "Client":
+                self.logger = logging.getLogger("Client")
+            else:
+                raise Exception(f"{cls.__name__} should be inherited from classes with classname \"Server\" or \"Client\"")
+            super(cls, self).__init__(*args, **kwargs)
+
+        return new_init
+
+    cls.__init__ = decorate(cls.__init__)
+
+    return cls
 
 
+@bind_logger
 class ValidatorMixin:
     """Mixin for using in __init__ methods of child classes
     validating used ports, must be within [1024:65535]"""
-
-    def __init__(self, *args, **kwargs):
-        self.logger = None
-        bind_logger(cls=self.__class__, instance=self)
-        super().__init__(*args, **kwargs)
 
     def validate_port(self, port: int):
         if port < 1024 or port > 65535:
@@ -32,15 +40,12 @@ class ValidatorMixin:
             raise ValueError()
 
 
+@bind_logger
 class MessengerMixin:
     """Mixin for using in Server and Client classes
     implementing send_message/receive_message methods
     and helping methods for messaging"""
 
-    def __init__(self, *args, **kwargs):
-        self.logger = None
-        bind_logger(cls=self.__class__, instance=self)
-        super().__init__(*args, **kwargs)
 
     def create_presence_message(self, account_name="Guest") -> dict:
         """
