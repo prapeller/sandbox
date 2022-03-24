@@ -2,46 +2,73 @@ import json
 import logging
 import socket
 import time
+import inspect
 
 from settings import BUFFER_SIZE, ENCODING, ACTION, ACCOUNT_NAME, TIME, PRESENCE, USER, RESPONSE, ERROR
 from project_logs.config import config_log_client, config_log_server
 
 
-def bind_logger(cls, instance):
-    """Binding server/client logger to mixin in accordance with child class name"""
-    if instance.__class__.__name__ == "Server":
-        instance.logger = logging.getLogger("Server")
-    elif instance.__class__.__name__ == "Client":
-        instance.logger = logging.getLogger("Client")
-    else:
-        raise Exception(f"{cls.__name__} should be inherited from classes with classname \"Server\" or \"Client\"")
+def log_method(method):
+    """Decorator for logging methods of the "Server" and "Client" classes:
+    """
+
+    def wrapper(*args, **kwargs):
+        instance = args[0]
+        class_name = instance.__class__.__name__
+
+        if class_name == "Server":
+            logger = logging.getLogger("Server")
+        elif class_name == "Client":
+            logger = logging.getLogger("Client")
+        else:
+            raise ValueError(f"{instance} should be inherited from classes with classname \"Server\" or \"Client\"")
+        # logger.debug(f'from module: {method.__module__}, from function: {inspect.stack()[1][3]}, called method: {method} with params: {args}, {kwargs}', stacklevel=2)
+        logger.debug(f'"{class_name}" called "{method.__name__}" with params: {args}, {kwargs}', stacklevel=2)
+        return method(*args, **kwargs)
+
+    return wrapper
 
 
+def bind_logger_to_class(cls):
+    """Decorator for binding server/client logger to mixin
+    in accordance with name of class that using mixin"""
+
+    def decorate(__init__):
+        def new_init(self, *args, **kwargs):
+            if self.__class__.__name__ == "Server":
+                self.logger = logging.getLogger("Server")
+            elif self.__class__.__name__ == "Client":
+                self.logger = logging.getLogger("Client")
+            else:
+                raise ValueError(f"{cls.__name__} should be inherited from classes with classname \"Server\" or \"Client\"")
+            super(cls, self).__init__(*args, **kwargs)
+
+        return new_init
+
+    cls.__init__ = decorate(cls.__init__)
+
+    return cls
+
+
+@bind_logger_to_class
 class ValidatorMixin:
     """Mixin for using in __init__ methods of child classes
     validating used ports, must be within [1024:65535]"""
 
-    def __init__(self, *args, **kwargs):
-        self.logger = None
-        bind_logger(cls=self.__class__, instance=self)
-        super().__init__(*args, **kwargs)
-
+    @log_method
     def validate_port(self, port: int):
         if port < 1024 or port > 65535:
             self.logger.critical(f"{self} cant validate port {port}, it must be within [1024:65535]")
             raise ValueError()
 
 
+@bind_logger_to_class
 class MessengerMixin:
     """Mixin for using in Server and Client classes
     implementing send_message/receive_message methods
     and helping methods for messaging"""
 
-    def __init__(self, *args, **kwargs):
-        self.logger = None
-        bind_logger(cls=self.__class__, instance=self)
-        super().__init__(*args, **kwargs)
-
+    @log_method
     def create_presence_message(self, account_name="Guest") -> dict:
         """
         Returns dict with presence_message for current client, for not registered account "account_name" is "Guest":
@@ -58,6 +85,7 @@ class MessengerMixin:
         self.logger.debug(f"{self} creating presence message {message}")
         return message
 
+    @log_method
     def receive_message(self, transport: socket.socket) -> dict:
         try:
             message_bytes = transport.recv(BUFFER_SIZE)
@@ -70,6 +98,7 @@ class MessengerMixin:
             self.logger.debug(f"critical in {self}: {e}")
             transport.close()
 
+    @log_method
     def send_message(self, transport: socket.socket, message: dict) -> None:
         try:
             message_json = json.dumps(message)
@@ -80,6 +109,7 @@ class MessengerMixin:
             self.logger.debug(f"{self} can't send message: {e}")
             transport.close()
 
+    @log_method
     def get_response(self, message: dict) -> dict:
         """parsing and returning response from message"""
         if all((
@@ -97,6 +127,7 @@ class MessengerMixin:
         self.logger.debug(f"{self} got response: {response} from message:{message}")
         return response
 
+    @log_method
     def get_response_code(self, message: dict) -> str:
         response_code = None
         if RESPONSE in message:
