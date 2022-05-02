@@ -272,3 +272,6 @@ from collections import ChainMap
 # print(d_map_with_empty_child.parents)
 # print(list(d_map_with_empty_child))
 # print(list(d_map_with_empty_child.values()))
+
+enclosed
+composition/aggregation

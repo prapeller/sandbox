@@ -16,7 +16,7 @@ while True:
     elif USER == 's':
         for _ in range(10):
 
-            P_LIST.append(Popen(['python', 'time_client_random.py'], shell=False))
+            P_LIST.append(Popen(['python', 'time_client_random.py'], shell=True))
 
         print(' Запущено 10 клиентов')
     elif USER == 'x':
